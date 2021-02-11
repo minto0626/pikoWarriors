@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] GameObject bulletPrefab;
+    Vector3 shotPoint = new Vector3(0f, 0.3f, 0f);
+
     float moveSpeed = 0.05f;
 
     private void Update()
     {
         MoveControl();
+        BulletShot();
     }
 
     private void MoveControl()
@@ -29,5 +33,18 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.transform.Translate(moveSpeed, 0f, 0f);
         }
+    }
+
+    private void BulletShot()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OneShot();
+        }
+    }
+
+    private void OneShot()
+    {
+        var bullet = Instantiate(bulletPrefab, transform.localPosition, Quaternion.identity);
     }
 }
