@@ -26,7 +26,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 
     virtual protected void Awake()
     {
-        
+        CheckInstance();
     }
 
     protected bool CheckInstance()
