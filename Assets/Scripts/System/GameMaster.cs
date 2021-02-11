@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMaster : MonoBehaviour
+public class GameMaster : SingletonMonoBehaviour<GameMaster>
 {
     [SerializeField] GameObject playerPrefab;
     GameObject playerObj;
@@ -10,6 +10,11 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
+        if (CheckInstance())
+        {
+            DontDestroyOnLoad(this);
+        }
+
         CreatePlayer();
     }
 
