@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void OneShot()
     {
-        var bullet = Instantiate(bulletPrefab, transform.localPosition, Quaternion.identity);
+        var bullet = ObjectPooler.Instance.GetObject();
+        bullet.transform.position = transform.localPosition;
     }
 }
