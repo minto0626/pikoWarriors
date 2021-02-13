@@ -5,10 +5,7 @@ using UnityEngine;
 public class GameMaster : SingletonMonoBehaviour<GameMaster>
 {
     [SerializeField] new Camera camera;
-    [SerializeField] GameObject playerPrefab;
-    GameObject playerObj;
     [SerializeField] Vector3 setPlayerPos = new Vector3(0f, -3f, 0f);
-    [SerializeField] GameObject bulletPrefab;
     const int BULLET_MAX = 30;
 
     private void Start()
@@ -19,7 +16,8 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
         }
 
         ObjectPooler.Instance.SetUp();
-        ObjectPooler.Instance.CreatePool(bulletPrefab, BULLET_MAX);
+        var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
+        ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
         CreatePlayer();
     }
 
@@ -39,7 +37,8 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
 
     void CreatePlayer()
     {
-        var player = Instantiate(playerPrefab, setPlayerPos, Quaternion.identity);
+        var p = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
+        var player = Instantiate(p, setPlayerPos, Quaternion.identity);
     }
 
     private void Update()
