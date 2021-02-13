@@ -24,5 +24,15 @@ public class BulletController : MonoBehaviour
         gm = GameMaster.Instance;
     }
 
+    /// <summary>
+    /// 画面外なら非表示
+    /// </summary>
+    void Disappear()
+    {
+        // +1して画面外で消えるようにする
+        if((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
