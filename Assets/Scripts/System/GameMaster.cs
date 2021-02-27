@@ -19,6 +19,7 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
         var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
         ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
         CreatePlayer();
+        EnemyGenerator.Instance.Generate();
     }
 
     public Vector3 GetCameraTopLeft()
