@@ -46,6 +46,6 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
 
     private void Update()
     {
-        
+        CollisionManager.Instance.OnUpdate();
     }
 }
