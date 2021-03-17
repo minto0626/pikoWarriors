@@ -33,6 +33,7 @@ public class BulletController : MonoBehaviour
         if((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
         {
             gameObject.SetActive(false);
+            CollisionManager.Instance.Remove(gameObject.GetComponent<ObjectCollision>());
         }
     }
 }
