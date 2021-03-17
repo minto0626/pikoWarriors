@@ -41,6 +41,7 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
     {
         var p = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
         var player = Instantiate(p, setPlayerPos, Quaternion.identity);
+        CollisionManager.Instance.AddList(player.GetComponent<ObjectCollision>());
     }
 
     private void Update()
