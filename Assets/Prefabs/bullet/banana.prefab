@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6911916701978461726}
   - component: {fileID: 6911916701978461697}
   - component: {fileID: 542894772267389282}
+  - component: {fileID: -457639565631458551}
   m_Layer: 0
   m_Name: banana
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 6911916701978461696}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -94,3 +95,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8afb2fa7e2608f42a56913ce60abba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-457639565631458551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6911916701978461696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f12932307bf2524dbdfadbae04a22b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collType: 0
+  objType: 2
+  radius: 1.1
+  height: 0

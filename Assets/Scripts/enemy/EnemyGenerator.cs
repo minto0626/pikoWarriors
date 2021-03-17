@@ -24,6 +24,7 @@ public class EnemyGenerator : SingletonMonoBehaviour<EnemyGenerator>
         for (var index = 0; index < GENERATE_MAX; index++)
         {
             var obj = Instantiate(enemyObj, generatePos[index].transform.position, Quaternion.identity);
+            CollisionManager.Instance.AddList(obj.GetComponent<ObjectCollision>());
         }
     }
 }
