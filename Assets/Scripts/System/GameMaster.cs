@@ -15,6 +15,7 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
             DontDestroyOnLoad(gameObject);
         }
 
+        CollisionManager.Instance.SetUp();
         ObjectPooler.Instance.SetUp();
         var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
         ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
