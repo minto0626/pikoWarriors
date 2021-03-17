@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
     private void OneShot()
     {
         var bullet = ObjectPooler.Instance.GetObject();
-        bullet.transform.position = transform.localPosition;
+        bullet.transform.position = transform.localPosition + new Vector3(0f, 1f, 0f);
+        CollisionManager.Instance.AddList(bullet.GetComponent<ObjectCollision>());
     }
 }
