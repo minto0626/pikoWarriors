@@ -130,7 +130,8 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
                 if (t == null) continue;
                 if (t.collisionID > targetCount) break;
 
-                if (!CheckInterferenceObj(c.GetObjectType, t.GetObjectType)) continue;
+                // レイヤーマスクを見てビットが立っている物のみ当たる
+                if (((1 << c.gameObject.layer) & masksByLayer[t.gameObject.layer]) == 0) continue;
 
                 if (CircleToCircle(c, t))
                 {
@@ -145,36 +146,6 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// 干渉しあうかどうかの判定
-    /// </summary>
-    /// <param name="c"></param>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    bool CheckInterferenceObj(ObjectType c, ObjectType t)
-    {
-        switch (c)
-        {
-            case ObjectType.Player:
-                if (t == ObjectType.P_Bullet) return false;
-                break;
-            case ObjectType.Enemy:
-                if (t == ObjectType.Enemy) return false;
-                if (t == ObjectType.E_Bullet) return false;
-                break;
-            case ObjectType.P_Bullet:
-                if (t == ObjectType.Player) return false;
-                if (t == ObjectType.P_Bullet) return false;
-                break;
-            case ObjectType.E_Bullet:
-                if (t == ObjectType.Enemy) return false;
-                if (t == ObjectType.E_Bullet) return false;
-                break;
-        }
-
-        return true;
     }
 
     /// <summary>
