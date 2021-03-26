@@ -42,6 +42,8 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
     /// </summary>
     int targetCount = 0;
 
+    Dictionary<int, int> masksByLayer = new Dictionary<int, int>();
+
     /// <summary>
     /// 初期化
     /// </summary>
