@@ -55,6 +55,7 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
         }
 
         targetList = new ObjectCollision[MANAGE_MAX];
+        InitMaskTable();
     }
 
     /// <summary>
@@ -90,6 +91,26 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
     public void OnUpdate()
     {
         JudgmentUpdate();
+    }
+
+    /// <summary>
+    /// レイヤーマスクテーブルの初期化
+    /// </summary>
+    void InitMaskTable()
+    {
+        for (var i = 0; i < 32; i++)
+        {
+            int mask = 0;
+            for (var j = 0; j < 32; j ++)
+            {
+                if(!Physics2D.GetIgnoreLayerCollision(i, j))
+                {
+                    mask |= 1 << j;
+                }
+            }
+
+            masksByLayer.Add(i, mask);
+        }
     }
 
     /// <summary>
