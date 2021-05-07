@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3678685689899411365}
   - component: {fileID: 269284291721235949}
-  m_Layer: 0
+  - component: {fileID: 2458485243366675241}
+  - component: {fileID: 5454810009845286808}
+  m_Layer: 10
   m_Name: bubble_bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,3 +83,31 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2458485243366675241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3911931625135941230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8afb2fa7e2608f42a56913ce60abba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5454810009845286808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3911931625135941230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f12932307bf2524dbdfadbae04a22b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collType: 0
+  objType: 2
+  radius: 0.25
+  height: 0

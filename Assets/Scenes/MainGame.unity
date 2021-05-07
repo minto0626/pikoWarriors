@@ -311,7 +311,7 @@ MonoBehaviour:
     type: 3}
   enemyPref: {fileID: 198203060051733981, guid: 60a5bd0fbda47ae4fb9695458c0f4ac3,
     type: 3}
-  bulletPref: {fileID: 6911916701978461696, guid: a0ec83c931e16a94da4fda948e9b0ef1,
+  bulletPref: {fileID: 3911931625135941230, guid: 84674937b5addc04593ce906f2138028,
     type: 3}
 --- !u!1 &1347634678
 GameObject:
