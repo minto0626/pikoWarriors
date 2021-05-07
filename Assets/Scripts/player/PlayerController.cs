@@ -65,7 +65,6 @@ public class PlayerController : MonoBehaviour
     {
         var bullet = ObjectPooler.Instance.GetObject();
         bullet.transform.position = transform.localPosition + shotPoint;
-        CollisionManager.Instance.AddList(bullet.GetComponent<ObjectCollision>());
     }
 
     /// <summary>
