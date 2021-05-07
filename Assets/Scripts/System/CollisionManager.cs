@@ -140,12 +140,14 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
         {
             var c = targetList[i];
             if (c == null) continue;
+            if (!c.gameObject.activeSelf) continue;
             if (c.collisionID > targetCount) break;
 
             for (var j = i + 1; j < targetList.Length; j++)
             {
                 var t = targetList[j];
                 if (t == null) continue;
+                if (!t.gameObject.activeSelf) continue;
                 if (t.collisionID > targetCount) break;
 
                 // レイヤーマスクを見てビットが立っている物のみ当たる
@@ -157,8 +159,6 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
                     t.isHit = true;
 
                     // 試しに消してみる
-                    Remove(c);
-                    Remove(t);
                     c.gameObject.SetActive(false);
                     t.gameObject.SetActive(false);
                 }
