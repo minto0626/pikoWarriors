@@ -59,9 +59,27 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
     }
 
     /// <summary>
-    /// 管理するオブジェクトを追加
+    /// オブジェクトのリストから管理するオブジェクトを追加
+    /// このオーバーロードは、プーラーと使うのが望ましい
     /// </summary>
-    /// <param name="oc"></param>
+    /// <param name="objList">オブジェクトのリスト</param>
+    public void AddList(List<GameObject> objList)
+    {
+        foreach (var obj in objList)
+        {
+            var oc = obj.GetComponent<ObjectCollision>();
+            if(oc != null)
+            {
+                AddList(oc);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 管理するオブジェクトを追加
+    /// このオーバーロードは、単体で取得する場合が望ましい
+    /// </summary>
+    /// <param name="oc">当たり判定のコンポーネント</param>
     public void AddList(ObjectCollision oc)
     {
         for(var i = 0; i < MANAGE_MAX; i++)
@@ -122,12 +140,14 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
         {
             var c = targetList[i];
             if (c == null) continue;
+            if (!c.gameObject.activeSelf) continue;
             if (c.collisionID > targetCount) break;
 
             for (var j = i + 1; j < targetList.Length; j++)
             {
                 var t = targetList[j];
                 if (t == null) continue;
+                if (!t.gameObject.activeSelf) continue;
                 if (t.collisionID > targetCount) break;
 
                 // レイヤーマスクを見てビットが立っている物のみ当たる
@@ -139,8 +159,6 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
                     t.isHit = true;
 
                     // 試しに消してみる
-                    Remove(c);
-                    Remove(t);
                     c.gameObject.SetActive(false);
                     t.gameObject.SetActive(false);
                 }
