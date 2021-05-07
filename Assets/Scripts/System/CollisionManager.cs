@@ -59,9 +59,27 @@ public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
     }
 
     /// <summary>
-    /// 管理するオブジェクトを追加
+    /// オブジェクトのリストから管理するオブジェクトを追加
+    /// このオーバーロードは、プーラーと使うのが望ましい
     /// </summary>
-    /// <param name="oc"></param>
+    /// <param name="objList">オブジェクトのリスト</param>
+    public void AddList(List<GameObject> objList)
+    {
+        foreach (var obj in objList)
+        {
+            var oc = obj.GetComponent<ObjectCollision>();
+            if(oc != null)
+            {
+                AddList(oc);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 管理するオブジェクトを追加
+    /// このオーバーロードは、単体で取得する場合が望ましい
+    /// </summary>
+    /// <param name="oc">当たり判定のコンポーネント</param>
     public void AddList(ObjectCollision oc)
     {
         for(var i = 0; i < MANAGE_MAX; i++)

@@ -15,7 +15,7 @@ public class ObjectPooler : SingletonMonoBehaviour<ObjectPooler>
         }
     }
 
-    public void CreatePool(GameObject obj, int maxCount)
+    public List<GameObject> CreatePool(GameObject obj, int maxCount)
     {
         poolObj = obj;
         poolObjList = new List<GameObject>();
@@ -26,6 +26,8 @@ public class ObjectPooler : SingletonMonoBehaviour<ObjectPooler>
             newObj.SetActive(false);
             poolObjList.Add(newObj);
         }
+
+        return poolObjList;
     }
 
     public GameObject GetObject()
