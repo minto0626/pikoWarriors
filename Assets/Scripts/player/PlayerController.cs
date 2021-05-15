@@ -31,27 +31,13 @@ public class PlayerController : MonoBehaviour
 
     private void MoveControl()
     {
-        // 上
-        if (Input.GetKey(KeyCode.W))
-        {
-            gameObject.transform.Translate(0f, moveSpeed, 0f);
-        }// 左
-        else if (Input.GetKey(KeyCode.A)){
-            gameObject.transform.Translate(-moveSpeed, 0f, 0f);
-        }// 下
-        else if (Input.GetKey(KeyCode.S))
-        {
-            gameObject.transform.Translate(0f, -moveSpeed, 0f);
-        } // 右
-        else if (Input.GetKey(KeyCode.D))
-        {
-            gameObject.transform.Translate(moveSpeed, 0f, 0f);
-        }
+        var move = InputManager.Instance.GetMoveValue();
+        gameObject.transform.Translate(move.x * moveSpeed, move.y * moveSpeed, 0f);
     }
 
     private void BulletShot()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(InputManager.Instance.GetButtonTrigger(InputManager.ButtonType.Fire))
         {
             // 弾を発射していなかったら撃てる
             if (!isShot) 

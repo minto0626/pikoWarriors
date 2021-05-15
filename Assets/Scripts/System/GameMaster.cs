@@ -15,6 +15,7 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
             DontDestroyOnLoad(gameObject);
         }
 
+        InputManager.Instance.Setup();
         CollisionManager.Instance.SetUp();
         ObjectPooler.Instance.SetUp();
         var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
@@ -47,6 +48,7 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
 
     private void Update()
     {
+        InputManager.Instance.OnUpdate();
         CollisionManager.Instance.OnUpdate();
     }
 }
