@@ -18,6 +18,19 @@ public class EnemyBase : MonoBehaviour
     }
 
     /// <summary>
+    /// 弾を一発出す
+    /// </summary>
+    /// <param name="shotPoint">出す座標</param>
+    protected void OneShot(Vector3 shotPoint)
+    {
+        var bullet = ObjectPooler.Instance.GetObject();
+        bullet.GetComponent<ObjectCollision>().SetUp(CollisionManager.CollisionType.Circle, 
+                                                        CollisionManager.ObjectType.E_Bullet,
+                                                        0.25f);
+        bullet.transform.position = transform.localPosition + shotPoint;
+    }
+
+    /// <summary>
     /// 画面外なら非表示
     /// </summary>
     protected bool Disappear()
