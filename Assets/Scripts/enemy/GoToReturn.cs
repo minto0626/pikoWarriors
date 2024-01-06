@@ -7,6 +7,12 @@ using UnityEngine;
 /// </summary>
 public class GoToReturn : EnemyBase
 {
+    /// <summary>
+    /// 弾の発射位置
+    /// </summary>
+    /// <returns></returns>
+    Vector3 shotPoint = new Vector3(0f, -0.3f, 0f);
+
     private void Start()
     {
         base.Setup();
@@ -27,7 +33,8 @@ public class GoToReturn : EnemyBase
             yield return null;
         }
 
-        yield return new WaitForSeconds(3f);
+        // 弾を撃つ
+        yield return StartCoroutine(StraightShot());
 
         while (true)
         {
@@ -35,5 +42,16 @@ public class GoToReturn : EnemyBase
             transform.position -= movePos;
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// まっすぐ撃つショット
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator StraightShot()
+    {
+        yield return new WaitForSeconds(1.5f);
+        base.OneShot(shotPoint);
+        yield return new WaitForSeconds(1.5f);
     }
 }

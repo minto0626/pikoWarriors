@@ -35,14 +35,26 @@ public class ObjectCollision : MonoBehaviour
     public bool isHit { get; set; }
 
     /// <summary>
-    /// コンストラクタ
+    /// 当たり判定パラメータ設定
     /// </summary>
-    /// <param name="ct">コリジョンの種類</param>
+    /// <param name="ct">当たり判定の形</param>
+    /// <param name="ot">オブジェクトのレイヤー</param>
     /// <param name="r">半径</param>
     /// <param name="h">高さ</param>
-    public ObjectCollision(CollisionManager.CollisionType ct, float r, float h)
+    public ObjectCollision(CollisionManager.CollisionType ct, CollisionManager.ObjectType ot, float r = 0f, float h = 0f)
     {
         collType = ct;
+        objType = ot;
+        gameObject.layer = LayerMask.NameToLayer(ot.ToString());
+        radius = r;
+        height = h;
+    }
+
+    public void SetUp(CollisionManager.CollisionType ct, CollisionManager.ObjectType ot, float r = 0f, float h = 0f)
+    {
+        collType = ct;
+        objType = ot;
+        gameObject.layer = LayerMask.NameToLayer(ot.ToString());
         radius = r;
         height = h;
     }
