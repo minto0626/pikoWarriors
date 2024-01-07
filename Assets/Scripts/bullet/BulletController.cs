@@ -2,37 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+using Game.System;
+
+namespace Game
 {
-    float moveSpeed = 0.1f;
-    GameMaster gm = null;
-
-    void Start()
+    public class BulletController : GameCharacter, ICircleCollison
     {
-        Setup();
-    }
+        float moveSpeed = 0.1f;
+        GameMaster gm = null;
 
-    void Update()
-    {
-        gameObject.transform.Translate(0f, moveSpeed, 0f);
-
-        Disappear();
-    }
-
-    void Setup()
-    {
-        gm = GameMaster.Instance;
-    }
-
-    /// <summary>
-    /// 画面外なら非表示
-    /// </summary>
-    void Disappear()
-    {
-        // +1して画面外で消えるようにする
-        if((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
+        public Vector2 Center => transform.position;
+        public float Radius => 0.25f;
+        public override void OnHit(GameCharacter target)
         {
-            gameObject.SetActive(false);
+            Debug.Log("弾が何かに当たった");
+            base.DestroyCharacter();
         }
+
+        void Start()
+        {
+            Setup();
+        }
+
+        void Update()
+        {
+            gameObject.transform.Translate(0f, moveSpeed, 0f);
+
+            Disappear();
+        }
+
+        void Setup()
+        {
+            gm = GameMaster.Instance;
+        }
+
+        /// <summary>
+        /// 画面外なら非表示
+        /// </summary>
+        void Disappear()
+        {
+            // +1して画面外で消えるようにする
+            if((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
     }
 }
