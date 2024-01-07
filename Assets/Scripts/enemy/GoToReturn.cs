@@ -2,56 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 行って帰る
-/// </summary>
-public class GoToReturn : EnemyBase
+namespace Game
 {
     /// <summary>
-    /// 弾の発射位置
+    /// 行って帰る
     /// </summary>
-    /// <returns></returns>
-    Vector3 shotPoint = new Vector3(0f, -0.3f, 0f);
-
-    private void Start()
+    public class GoToReturn : EnemyBase
     {
-        base.Setup();
-        movePos.y = base.moveSpeed;
-        StartCoroutine(Move());
-    }
+        /// <summary>
+        /// 弾の発射位置
+        /// </summary>
+        /// <returns></returns>
+        Vector3 shotPoint = new Vector3(0f, -0.3f, 0f);
 
-    /// <summary>
-    /// 移動
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator Move()
-    {
-        while (true)
+        public override float Radius => 0.5f;
+
+        private void Start()
         {
-            if (gameObject.transform.position.y < 0f) break;
-            transform.position += movePos;
-            yield return null;
+            base.Setup();
+            movePos.y = base.moveSpeed;
+            StartCoroutine(Move());
         }
 
-        // 弾を撃つ
-        yield return StartCoroutine(StraightShot());
-
-        while (true)
+        /// <summary>
+        /// 移動
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator Move()
         {
-            if (base.Disappear()) break;
-            transform.position -= movePos;
-            yield return null;
-        }
-    }
+            while (true)
+            {
+                if (gameObject.transform.position.y < 0f) break;
+                transform.position += movePos;
+                yield return null;
+            }
 
-    /// <summary>
-    /// まっすぐ撃つショット
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator StraightShot()
-    {
-        yield return new WaitForSeconds(1.5f);
-        base.OneShot(shotPoint);
-        yield return new WaitForSeconds(1.5f);
+            // 弾を撃つ
+            yield return StartCoroutine(StraightShot());
+
+            while (true)
+            {
+                if (base.Disappear()) break;
+                transform.position -= movePos;
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// まっすぐ撃つショット
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator StraightShot()
+        {
+            yield return new WaitForSeconds(1.5f);
+            base.OneShot(shotPoint);
+            yield return new WaitForSeconds(1.5f);
+        }
     }
 }

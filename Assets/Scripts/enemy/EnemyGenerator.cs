@@ -2,29 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyGenerator : SingletonMonoBehaviour<EnemyGenerator>
+namespace Game.System
 {
-    [SerializeField] GameObject[] generatePos;
-    GameObject enemyObj;
-
-    const int GENERATE_MAX = 3;
-
-    void Start()
+    public class EnemyGenerator : SingletonMonoBehaviour<EnemyGenerator>
     {
-        if (CheckInstance())
+        [SerializeField] GameObject[] generatePos;
+        GameObject enemyObj;
+
+        const int GENERATE_MAX = 3;
+
+        void Start()
         {
-            DontDestroyOnLoad(gameObject);
+            if (CheckInstance())
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+
+            enemyObj = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.ENEMY);
         }
 
-        enemyObj = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.ENEMY);
-    }
-
-    public void Generate()
-    {
-        for (var index = 0; index < GENERATE_MAX; index++)
+        public void Generate()
         {
-            var obj = Instantiate(enemyObj, generatePos[index].transform.position, Quaternion.identity);
-            CollisionManager.Instance.AddList(obj.GetComponent<ObjectCollision>());
+            for (var index = 0; index < GENERATE_MAX; index++)
+            {
+                var obj = Instantiate(enemyObj, generatePos[index].transform.position, Quaternion.identity);
+                CollisionManager.Instance.AddList(obj);
+            }
         }
     }
 }

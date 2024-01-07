@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.System;
 using UnityEngine;
 
 public class GameMaster : SingletonMonoBehaviour<GameMaster>
@@ -43,7 +44,7 @@ public class GameMaster : SingletonMonoBehaviour<GameMaster>
     {
         var p = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
         var player = Instantiate(p, setPlayerPos, Quaternion.identity);
-        CollisionManager.Instance.AddList(player.GetComponent<ObjectCollision>());
+        CollisionManager.Instance.AddList(player);
     }
 
     private void Update()
