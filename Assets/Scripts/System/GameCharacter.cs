@@ -36,5 +36,7 @@ namespace Game
             IsDestroy = true;
             gameObject.SetActive(false);
         }
+
+        public virtual void OnUpdate() {}
     }
 }

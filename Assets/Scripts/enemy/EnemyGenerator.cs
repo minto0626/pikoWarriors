@@ -4,30 +4,19 @@ using UnityEngine;
 
 namespace Game.System
 {
-    public class EnemyGenerator : SingletonMonoBehaviour<EnemyGenerator>
+    public class EnemyGenerator
     {
-        [SerializeField] GameObject[] generatePos;
         GameObject enemyObj;
 
-        const int GENERATE_MAX = 3;
-
-        void Start()
+        public void LoadPrefab()
         {
-            if (CheckInstance())
-            {
-                DontDestroyOnLoad(gameObject);
-            }
-
             enemyObj = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.ENEMY);
         }
 
-        public void Generate()
+        public GameObject Generate(Vector2 generatePos)
         {
-            for (var index = 0; index < GENERATE_MAX; index++)
-            {
-                var obj = Instantiate(enemyObj, generatePos[index].transform.position, Quaternion.identity);
-                CollisionManager.Instance.AddList(obj);
-            }
+            var obj = GameObject.Instantiate(enemyObj, generatePos, Quaternion.identity);
+            return obj;
         }
     }
 }
