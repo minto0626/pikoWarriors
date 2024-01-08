@@ -31,8 +31,9 @@ namespace Game.System
 
         /// <summary>
         /// コリジョンが付いているオブジェクトのリスト
+        /// エディタで見えるようにしておく
         /// </summary>
-        List<GameCharacter> managedCollisonList;
+        [SerializeField] List<GameCharacter> managedCollisonList;
 
         /// <summary>
         /// 管理する最大数
@@ -88,10 +89,11 @@ namespace Game.System
         /// <summary>
         /// 管理しなくなったオブジェクトを削除
         /// </summary>
-        /// <param name="oc"></param>
-        public void Remove(GameCharacter oc)
+        /// <param name="obj"></param>
+        public void Remove(GameCharacter obj)
         {
-            managedCollisonList.Remove(oc);
+            if (!managedCollisonList.Contains(obj)) { return; }
+            managedCollisonList.Remove(obj);
         }
 
         /// <summary>

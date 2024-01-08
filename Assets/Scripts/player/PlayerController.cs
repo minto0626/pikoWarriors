@@ -30,12 +30,7 @@ namespace Game
         public Vector2 Center => transform.position;
         public float Radius => 1;
 
-        public override void OnHit(GameCharacter target)
-        {
-            Debug.Log("プレイヤーが何かに当たった");
-        }
-
-        private void Update()
+        public override void OnUpdate()
         {
             MoveControl();
             BulletShot();
@@ -62,10 +57,9 @@ namespace Game
         private void OneShot()
         {
             var bullet = ObjectPooler.Instance.GetObject();
-            // bullet.GetComponent<ObjectCollision>().SetUp(CollisionManager.CollisionType.Circle,
-            //                                                 CollisionManager.ObjectType.P_Bullet,
-            //                                                 0.25f);
             bullet.transform.position = transform.localPosition + shotPoint;
+            GameMaster.Instance.managedGameCharacterList.Add(bullet.GetComponent<GameCharacter>());
+            CollisionManager.Instance.AddList(bullet);
         }
 
         /// <summary>

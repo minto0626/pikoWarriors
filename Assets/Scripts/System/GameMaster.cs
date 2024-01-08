@@ -1,55 +1,85 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Game.System;
+using System.Linq;
 using UnityEngine;
 
-public class GameMaster : SingletonMonoBehaviour<GameMaster>
+namespace Game.System
 {
-    [SerializeField] new Camera camera;
-    [SerializeField] Vector3 setPlayerPos = new Vector3(0f, -3f, 0f);
-    const int BULLET_MAX = 30;
-
-    private void Start()
+    public class GameMaster : SingletonMonoBehaviour<GameMaster>
     {
-        if (CheckInstance())
+        [SerializeField] new Camera camera;
+        [SerializeField] Vector3 setPlayerPos = new Vector3(0f, -3f, 0f);
+        [SerializeField] GameObject[] generatePos;
+        const int BULLET_MAX = 30;
+
+        // エディタで見えるようにしておく
+        public List<GameCharacter> managedGameCharacterList;
+        EnemyGenerator enemyGenerator;
+
+        void Start()
         {
-            DontDestroyOnLoad(gameObject);
+            if (CheckInstance())
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+
+            InputManager.Instance.Setup();
+            CollisionManager.Instance.SetUp();
+            ObjectPooler.Instance.SetUp();
+            enemyGenerator = new EnemyGenerator();
+            enemyGenerator.LoadPrefab();
+            managedGameCharacterList = new List<GameCharacter>();
+            var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
+            var pool = ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
+            CreatePlayer();
+            foreach (var pos in generatePos)
+            {
+                var enemy = enemyGenerator.Generate(pos.transform.position);
+                managedGameCharacterList.Add(enemy.GetComponent<GameCharacter>());
+                CollisionManager.Instance.AddList(enemy);
+            }
         }
 
-        InputManager.Instance.Setup();
-        CollisionManager.Instance.SetUp();
-        ObjectPooler.Instance.SetUp();
-        var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
-        var pool = ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
-        CollisionManager.Instance.AddList(pool);
-        CreatePlayer();
-        EnemyGenerator.Instance.Generate();
-    }
+        public Vector3 GetCameraTopLeft()
+        {
+            var tl = camera.ScreenToWorldPoint(Vector3.zero);
+            tl.Scale(new Vector3(1f, -1f, 1f));
+            return tl;
+        }
 
-    public Vector3 GetCameraTopLeft()
-    {
-        var tl = camera.ScreenToWorldPoint(Vector3.zero);
-        tl.Scale(new Vector3(1f, -1f, 1f));
-        return tl;
-    }
+        public Vector3 GetCameraBottomRight()
+        {
+            var br = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));
+            br.Scale(new Vector3(1f, -1f, 1f));
+            return br;
+        }
 
-    public Vector3 GetCameraBottomRight()
-    {
-        var br = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));
-        br.Scale(new Vector3(1f, -1f, 1f));
-        return br;
-    }
+        void CreatePlayer()
+        {
+            var p = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
+            var player = Instantiate(p, setPlayerPos, Quaternion.identity);
+            managedGameCharacterList.Add(player.GetComponent<GameCharacter>());
+            CollisionManager.Instance.AddList(player);
+        }
 
-    void CreatePlayer()
-    {
-        var p = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
-        var player = Instantiate(p, setPlayerPos, Quaternion.identity);
-        CollisionManager.Instance.AddList(player);
-    }
-
-    private void Update()
-    {
-        InputManager.Instance.OnUpdate();
-        CollisionManager.Instance.OnUpdate();
+        void Update()
+        {
+            InputManager.Instance.OnUpdate();
+            var remove = managedGameCharacterList.Where(chara => chara.IsDestroy);
+            if (remove.Count() > 0)
+            {
+                var removeList = remove.ToArray();
+                foreach (var obj in removeList)
+                {
+                    managedGameCharacterList.Remove(obj);
+                    CollisionManager.Instance.Remove(obj);
+                }
+            }
+            foreach (var gameCharacter in managedGameCharacterList)
+            {
+                gameCharacter.OnUpdate();
+            }
+            CollisionManager.Instance.OnUpdate();
+        }
     }
 }

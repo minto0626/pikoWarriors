@@ -15,10 +15,6 @@ namespace Game
 
         public virtual Vector2 Center => transform.position;
         public virtual float Radius => 0;
-        public virtual void OnHit(GameObject target)
-        {
-            Debug.Log("敵が何かに当たった");
-        }
 
         /// <summary>
         /// 初期化
@@ -35,10 +31,9 @@ namespace Game
         protected void OneShot(Vector3 shotPoint)
         {
             var bullet = ObjectPooler.Instance.GetObject();
-            // bullet.GetComponent<ObjectCollision>().SetUp(CollisionManager.CollisionType.Circle,
-            //                                                 CollisionManager.ObjectType.E_Bullet,
-            //                                                 0.25f);
             bullet.transform.position = transform.localPosition + shotPoint;
+            GameMaster.Instance.managedGameCharacterList.Add(bullet.GetComponent<GameCharacter>());
+            CollisionManager.Instance.AddList(bullet);
         }
 
         /// <summary>
@@ -49,7 +44,7 @@ namespace Game
             // +1して画面外で消えるようにする
             if ((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
             {
-                gameObject.SetActive(false);
+                base.DestroyCharacter();
                 return true;
             }
 

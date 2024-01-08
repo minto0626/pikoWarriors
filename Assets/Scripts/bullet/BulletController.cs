@@ -15,7 +15,6 @@ namespace Game
         public float Radius => 0.25f;
         public override void OnHit(GameCharacter target)
         {
-            Debug.Log("弾が何かに当たった");
             base.DestroyCharacter();
         }
 
@@ -24,10 +23,9 @@ namespace Game
             Setup();
         }
 
-        void Update()
+        public override void OnUpdate()
         {
             gameObject.transform.Translate(0f, moveSpeed, 0f);
-
             Disappear();
         }
 
@@ -44,9 +42,8 @@ namespace Game
             // +1して画面外で消えるようにする
             if((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
             {
-                gameObject.SetActive(false);
+                base.DestroyCharacter();
             }
         }
-
     }
 }
