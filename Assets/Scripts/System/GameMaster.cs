@@ -15,12 +15,19 @@ namespace Game.System
         // エディタで見えるようにしておく
         public List<GameCharacter> managedGameCharacterList;
         EnemyGenerator enemyGenerator;
+        public Dictionary<int, int> GameCharaLayerDic;
 
         void Start()
         {
             if (CheckInstance())
             {
                 DontDestroyOnLoad(gameObject);
+            }
+
+            GameCharaLayerDic = new();
+            for (var index = 0; index < (int)CollisionManager.ObjectType.Length; index++)
+            {
+                GameCharaLayerDic.Add(index, LayerMask.NameToLayer(((CollisionManager.ObjectType)index).ToString()));
             }
 
             InputManager.Instance.Setup();
@@ -35,7 +42,9 @@ namespace Game.System
             foreach (var pos in generatePos)
             {
                 var enemy = enemyGenerator.Generate(pos.transform.position);
-                managedGameCharacterList.Add(enemy.GetComponent<GameCharacter>());
+                var chara = enemy.GetComponent<GameCharacter>();
+                chara.Initialize(GameCharaLayerDic[(int)CollisionManager.ObjectType.Enemy]);
+                managedGameCharacterList.Add(chara);
                 CollisionManager.Instance.AddList(enemy);
             }
         }
@@ -56,9 +65,11 @@ namespace Game.System
 
         void CreatePlayer()
         {
-            var p = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
-            var player = Instantiate(p, setPlayerPos, Quaternion.identity);
-            managedGameCharacterList.Add(player.GetComponent<GameCharacter>());
+            var preafab = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
+            var player = Instantiate(preafab, setPlayerPos, Quaternion.identity);
+            var chara = player.GetComponent<GameCharacter>();
+            chara.Initialize(GameCharaLayerDic[(int)CollisionManager.ObjectType.Player]);
+            managedGameCharacterList.Add(chara);
             CollisionManager.Instance.AddList(player);
         }
 
@@ -75,9 +86,13 @@ namespace Game.System
                     CollisionManager.Instance.Remove(obj);
                 }
             }
-            foreach (var gameCharacter in managedGameCharacterList)
+            // todo: OnUpdate中に管理数が増減する処理があると、GetEnumeratorでエラーが発生する。
+            //       現状インクリメント方式で対応しているが、いずれ対処したいところ。
+            // foreach (var gameCharacter in managedGameCharacterList)
+            for (var i = 0; i < managedGameCharacterList.Count(); i++)
             {
-                gameCharacter.OnUpdate();
+                //gameCharacter.OnUpdate();
+                managedGameCharacterList[i].OnUpdate();
             }
             CollisionManager.Instance.OnUpdate();
         }

@@ -18,8 +18,9 @@ namespace Game
             base.DestroyCharacter();
         }
 
-        void Start()
+        public override void Initialize(int layer)
         {
+            base.Initialize(layer);
             Setup();
         }
 
