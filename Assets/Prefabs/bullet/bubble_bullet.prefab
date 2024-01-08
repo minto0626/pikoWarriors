@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3678685689899411365}
   - component: {fileID: 269284291721235949}
   - component: {fileID: 2458485243366675241}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: bubble_bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,4 +97,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8afb2fa7e2608f42a56913ce60abba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerType: 3

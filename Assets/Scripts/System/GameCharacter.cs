@@ -11,20 +11,7 @@ namespace Game
     /// </summary>
     public abstract class GameCharacter : MonoBehaviour, IObjectCollison
     {
-        [SerializeField]
-        CollisionManager.ObjectType layerType;
-        int layer = -1;
-        public int Layer
-        {
-            get
-            {
-                if (layer == -1)
-                {
-                    layer = LayerMask.NameToLayer(layerType.ToString());
-                }
-                return layer;
-            }
-        }
+        public int Layer { get; private set; } = -1;
 
         public virtual void OnHit(GameCharacter target) {}
 
@@ -35,6 +22,12 @@ namespace Game
         {
             IsDestroy = true;
             gameObject.SetActive(false);
+        }
+
+        public virtual void Initialize(int layer)
+        {
+            Layer = layer;
+            IsDestroy = false;
         }
 
         public virtual void OnUpdate() {}
