@@ -86,9 +86,13 @@ namespace Game.System
                     CollisionManager.Instance.Remove(obj);
                 }
             }
-            foreach (var gameCharacter in managedGameCharacterList)
+            // todo: OnUpdate中に管理数が増減する処理があると、GetEnumeratorでエラーが発生する。
+            //       現状インクリメント方式で対応しているが、いずれ対処したいところ。
+            // foreach (var gameCharacter in managedGameCharacterList)
+            for (var i = 0; i < managedGameCharacterList.Count(); i++)
             {
-                gameCharacter.OnUpdate();
+                //gameCharacter.OnUpdate();
+                managedGameCharacterList[i].OnUpdate();
             }
             CollisionManager.Instance.OnUpdate();
         }
