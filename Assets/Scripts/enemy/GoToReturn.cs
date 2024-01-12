@@ -9,54 +9,107 @@ namespace Game
     /// </summary>
     public class GoToReturn : EnemyBase
     {
+        enum Phase
+        {
+            Go,
+            Wait,
+            Return,
+        }
+
         /// <summary>
         /// 弾の発射位置
         /// </summary>
-        /// <returns></returns>
-        Vector3 shotPoint = new Vector3(0f, -0.3f, 0f);
+        readonly Vector3 SHOT_POINT = new Vector3(0f, -0.3f, 0f);
+        /// <summary>
+        /// 止まる時の座標
+        /// </summary>
+        readonly float WAIT_POINT = 0f;
+        /// <summary>
+        /// 弾を撃つ時間
+        /// </summary>
+        readonly float SHOT_TIME = 1.5f;
+        /// <summary>
+        /// 帰る時の時間
+        /// </summary>
+        readonly float RETURN_TIME = 3f;
+        /// <summary>
+        /// 止まっている経過時間
+        /// </summary>
+        float waitTimer = 0f;
+        /// <summary>
+        /// 弾撃ちカウンタ
+        /// </summary>
+        int shotCount = 0;
+        /// <summary>
+        /// 現在のフェーズ
+        /// </summary>
+        Phase nowPhase;
 
         public override float Radius => 0.5f;
 
-        private void Start()
+        public override void Initialize(int layer)
         {
+            base.Initialize(layer);
             base.Setup();
             movePos.y = base.moveSpeed;
-            StartCoroutine(Move());
+            nowPhase = Phase.Go;
+            waitTimer = 0f;
+            shotCount = 0;
         }
 
-        /// <summary>
-        /// 移動
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator Move()
-        {
-            while (true)
-            {
-                if (gameObject.transform.position.y < 0f) break;
-                transform.position += movePos;
-                yield return null;
-            }
-
-            // 弾を撃つ
-            yield return StartCoroutine(StraightShot());
-
-            while (true)
-            {
-                if (base.Disappear()) break;
-                transform.position -= movePos;
-                yield return null;
-            }
-        }
+        public override void OnUpdate() => PhaseUpdate();
 
         /// <summary>
-        /// まっすぐ撃つショット
+        /// フェーズ更新
         /// </summary>
-        /// <returns></returns>
-        private IEnumerator StraightShot()
+        void PhaseUpdate()
         {
-            yield return new WaitForSeconds(1.5f);
-            base.OneShot(shotPoint);
-            yield return new WaitForSeconds(1.5f);
+            switch (nowPhase)
+            {
+                case Phase.Go:
+                {
+                    if (gameObject.transform.position.y <= WAIT_POINT)
+                    {
+                        nowPhase = Phase.Wait;
+                        movePos.y = 0f;
+                        return;
+                    }
+                }
+                break;
+                case Phase.Wait:
+                {
+                    if (waitTimer >= RETURN_TIME)
+                    {
+                        nowPhase = Phase.Return;
+                        movePos.y = -base.moveSpeed;
+                        return;
+                    }
+                    else if (waitTimer >= SHOT_TIME)
+                    {
+                        if (shotCount == 0)
+                        {
+                            base.OneShot(SHOT_POINT);
+                            shotCount++;
+                        }
+                    }
+
+                    waitTimer += Time.deltaTime;
+                }
+                break;
+                case Phase.Return:
+                {
+                    if (base.Disappear())
+                    {
+                        return;
+                    }
+                }
+                break;
+
+                default:
+                return;
+            }
+
+            transform.position += movePos;
         }
     }
 }
