@@ -22,10 +22,18 @@ namespace Game
         /// 発射可能フラグ
         /// </summary>
         bool isShot = false;
+        // 撃った数のカウント
+        int shotCount = 0;
+        // 撃ち始めのタイマー
+        float shotTimer = 0f;
         /// <summary>
         /// 1ショットの発射回数
         /// </summary>
         float SHOT_LIMIT = 4;
+        /// <summary>
+        /// 弾の発射間隔
+        /// </summary>
+        float SHOT_INTERVAL_TIME = (1f / 60f) * 5f;
 
         public Vector2 Center => transform.position;
         public float Radius => 1;
@@ -36,25 +44,29 @@ namespace Game
             BulletShot();
         }
 
-        private void MoveControl()
+        void MoveControl()
         {
             var move = InputManager.Instance.GetMoveValue();
             gameObject.transform.Translate(move.x * moveSpeed, move.y * moveSpeed, 0f);
         }
 
-        private void BulletShot()
+        void BulletShot()
         {
-            if(InputManager.Instance.GetButtonTrigger(InputManager.ButtonType.Fire))
+            // 弾を発射中でなければ撃てる
+            if (!isShot)
             {
-                // 弾を発射していなかったら撃てる
-                if (!isShot) 
+                if(InputManager.Instance.GetButtonTrigger(InputManager.ButtonType.Fire))
                 {
-                    StartCoroutine(OhuroShot());
+                    isShot = true;
                 }
+            }
+            else
+            {
+                OhuroShotUpdate();
             }
         }
 
-        private void OneShot()
+        void OneShot()
         {
             var bullet = ObjectPooler.Instance.GetObject();
             var chara = bullet.GetComponent<GameCharacter>();
@@ -67,34 +79,25 @@ namespace Game
         /// <summary>
         /// オーバーフロッシャーのようなショット
         /// </summary>
-        /// <returns></returns>
-        private IEnumerator OhuroShot()
+        void OhuroShotUpdate()
         {
-            // 撃った数のカウント
-            var shotCount = 0;
-            // 撃ち始めのタイマー
-            var shotTimer = 0f;
-            
-            isShot = true;
+            if (!isShot) { return; }
 
-            while(true)
+            if (shotCount >= SHOT_LIMIT)
             {
-                if(shotCount == SHOT_LIMIT)
-                {
-                    isShot = false;
-                    yield break;
-                }
-
-                // 2fごとに弾を出す
-                if(shotTimer >= 0.1f * shotCount)
-                {
-                    OneShot();
-                    shotCount++;
-                }
-
-                shotTimer += Time.deltaTime;
-                yield return null;
+                isShot = false;
+                shotCount = 0;
+                shotTimer = 0f;
+                return;
             }
+
+            if (shotTimer >= SHOT_INTERVAL_TIME * shotCount)
+            {
+                OneShot();
+                shotCount++;
+            }
+
+            shotTimer += Time.deltaTime;
         }
     }
 }
