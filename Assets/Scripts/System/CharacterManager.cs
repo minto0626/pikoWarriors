@@ -22,6 +22,7 @@ namespace Game.System
         readonly Dictionary<int, int> charaLayerDic;
 
         readonly CollisionManager collisionManager;
+        readonly ObjectPooler<GameCharacter> bulletPool;
 
         public CharacterManager()
         {
@@ -34,10 +35,9 @@ namespace Game.System
             manageCharaList = new();
             collisionManager = new();
 
-            ObjectPooler.Instance.SetUp();
-            var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
-            const int BULLET_MAX = 30;
-            ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
+            var bulletPrefab = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
+            const int BULLET_POOL_MAX = 32;
+            bulletPool = new(bulletPrefab.GetComponent<GameCharacter>(), BULLET_POOL_MAX);
         }
 
         public void OnUpdate()
@@ -87,7 +87,7 @@ namespace Game.System
                 case ObjectType.P_Bullet:
                 case ObjectType.E_Bullet:
                 {
-                    obj = ObjectPooler.Instance.GetObject().GetComponent<GameCharacter>();
+                    obj = bulletPool.Get();
                 }
                 break;
 
