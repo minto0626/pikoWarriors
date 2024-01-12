@@ -38,14 +38,12 @@ namespace Game.System
 
         /// <summary>
         /// 管理するオブジェクトを追加
-        /// このオーバーロードは、単体で取得する場合が望ましい
         /// </summary>
-        /// <param name="oc">当たり判定のコンポーネント</param>
-        public void AddList(GameObject obj)
+        /// <param name="obj"></param>
+        public void AddList(GameCharacter obj)
         {
-            var oc = obj.GetComponent<GameCharacter>();
-            if (oc == null) { return; }
-            managedCollisonList.Add(oc);
+            if (managedCollisonList.Contains(obj)) { return; }
+            managedCollisonList.Add(obj);
         }
 
         /// <summary>

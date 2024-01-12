@@ -97,7 +97,7 @@ namespace Game.System
 
             obj.Initialize(charaLayerDic[(int)objectType]);
             manageCharaList.Add(obj);
-            collisionManager.AddList(obj.gameObject);
+            collisionManager.AddList(obj);
 
             return obj;
         }
