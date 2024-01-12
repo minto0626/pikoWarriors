@@ -4,20 +4,8 @@ using UnityEngine;
 
 namespace Game.System
 {
-    public class CollisionManager : SingletonMonoBehaviour<CollisionManager>
+    public class CollisionManager
     {
-        /// <summary>
-        /// オブジェクトの種類
-        /// </summary>
-        public enum ObjectType
-        {
-            Player = 0,
-            Enemy,
-            P_Bullet,
-            E_Bullet,
-            Length
-        }
-
         /// <summary>
         /// コリジョンの種類
         /// </summary>
@@ -31,59 +19,31 @@ namespace Game.System
 
         /// <summary>
         /// コリジョンが付いているオブジェクトのリスト
-        /// エディタで見えるようにしておく
         /// </summary>
-        [SerializeField] List<GameCharacter> managedCollisonList;
+        List<GameCharacter> managedCollisonList;
 
         /// <summary>
         /// 管理する最大数
         /// </summary>
         const int MANAGE_CAPACITY = 256;
 
-        /// <summary>
-        /// 管理中の個数カウンター
-        /// </summary>
-        int targetCount = 0;
+        Dictionary<int, int> masksByLayer;
 
-        Dictionary<int, int> masksByLayer = new Dictionary<int, int>();
-
-        /// <summary>
-        /// 初期化
-        /// </summary>
-        public void SetUp()
+        public CollisionManager()
         {
-            if (CheckInstance())
-            {
-                DontDestroyOnLoad(gameObject);
-            }
-
-            managedCollisonList = new List<GameCharacter>(MANAGE_CAPACITY);
+            managedCollisonList = new(MANAGE_CAPACITY);
+            masksByLayer = new();
             InitMaskTable();
         }
 
         /// <summary>
-        /// オブジェクトのリストから管理するオブジェクトを追加
-        /// このオーバーロードは、プーラーと使うのが望ましい
-        /// </summary>
-        /// <param name="objList">オブジェクトのリスト</param>
-        public void AddList(List<GameObject> objList)
-        {
-            foreach (var obj in objList)
-            {
-                AddList(obj);
-            }
-        }
-
-        /// <summary>
         /// 管理するオブジェクトを追加
-        /// このオーバーロードは、単体で取得する場合が望ましい
         /// </summary>
-        /// <param name="oc">当たり判定のコンポーネント</param>
-        public void AddList(GameObject obj)
+        /// <param name="obj"></param>
+        public void AddList(GameCharacter obj)
         {
-            var oc = obj.GetComponent<GameCharacter>();
-            if (oc == null) { return; }
-            managedCollisonList.Add(oc);
+            if (managedCollisonList.Contains(obj)) { return; }
+            managedCollisonList.Add(obj);
         }
 
         /// <summary>

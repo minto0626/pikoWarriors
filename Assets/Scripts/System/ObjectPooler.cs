@@ -2,59 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooler : SingletonMonoBehaviour<ObjectPooler>
+namespace Game.System
 {
-    private List<GameObject> poolObjList;
-    private GameObject poolObj;
-
-    public void SetUp()
+    public class ObjectPooler<TResource> where TResource : GameCharacter
     {
-        if (CheckInstance())
+        readonly List<TResource> poolObjList;
+        readonly TResource poolOrigin;
+
+        public ObjectPooler(TResource origin, int capacity)
         {
-            DontDestroyOnLoad(gameObject);
-        }
-    }
+            poolOrigin = origin;
+            poolObjList = new(capacity);
 
-    public List<GameObject> CreatePool(GameObject obj, int maxCount)
-    {
-        poolObj = obj;
-        poolObjList = new List<GameObject>();
-
-        for(var i = 0; i < maxCount; i++)
-        {
-            var newObj = CreateNewObject();
-            newObj.SetActive(false);
-            poolObjList.Add(newObj);
-        }
-
-        return poolObjList;
-    }
-
-    public GameObject GetObject()
-    {
-        // 使用中でないものを探して返す
-        foreach (var obj in poolObjList)
-        {
-            if (obj.activeSelf == false)
+            for(var i = 0; i < capacity; i++)
             {
-                obj.SetActive(true);
-                return obj;
+                var newObj = Create();
+                newObj.gameObject.SetActive(false);
+                poolObjList.Add(newObj);
             }
         }
 
-        // 全て使用中だったら新しく作って返す
-        var newObj = CreateNewObject();
-        newObj.SetActive(true);
-        poolObjList.Add(newObj);
+        public TResource Get()
+        {
+            // 使用中でないものを探して返す
+            foreach (var obj in poolObjList)
+            {
+                if (!obj.IsActive)
+                {
+                    obj.gameObject.SetActive(true);
+                    return obj;
+                }
+            }
 
-        return newObj;
-    }
+            // 全て使用中だったら新しく作って返す
+            var newObj = Create();
+            newObj.gameObject.SetActive(true);
+            poolObjList.Add(newObj);
 
-    private GameObject CreateNewObject()
-    {
-        var newObj = Instantiate(poolObj);
-        newObj.name = poolObj.name + (poolObjList.Count + 1);
+            return newObj;
+        }
 
-        return newObj;
+        TResource Create()
+        {
+            var newObj = GameObject.Instantiate(poolOrigin);
+            newObj.name = poolOrigin.name + (poolObjList.Count + 1);
+            return newObj;
+        }
     }
 }
