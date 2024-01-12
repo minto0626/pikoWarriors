@@ -10,12 +10,9 @@ namespace Game.System
         [SerializeField] new Camera camera;
         [SerializeField] Vector3 setPlayerPos = new Vector3(0f, -3f, 0f);
         [SerializeField] GameObject[] generatePos;
-        const int BULLET_MAX = 30;
 
-        // エディタで見えるようにしておく
-        public List<GameCharacter> managedGameCharacterList;
-        EnemyGenerator enemyGenerator;
-        public Dictionary<int, int> GameCharaLayerDic;
+        CharacterManager characterManager = null;
+        public CharacterManager CharacterManager => characterManager;
 
         void Start()
         {
@@ -24,29 +21,12 @@ namespace Game.System
                 DontDestroyOnLoad(gameObject);
             }
 
-            GameCharaLayerDic = new();
-            for (var index = 0; index < (int)CollisionManager.ObjectType.Length; index++)
-            {
-                GameCharaLayerDic.Add(index, LayerMask.NameToLayer(((CollisionManager.ObjectType)index).ToString()));
-            }
-
             InputManager.Instance.Setup();
-            CollisionManager.Instance.SetUp();
-            ObjectPooler.Instance.SetUp();
-            enemyGenerator = new EnemyGenerator();
-            enemyGenerator.LoadPrefab();
-            managedGameCharacterList = new List<GameCharacter>();
-            var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
-            var pool = ObjectPooler.Instance.CreatePool(b, BULLET_MAX);
+
+            characterManager = new CharacterManager();
+
             CreatePlayer();
-            foreach (var pos in generatePos)
-            {
-                var enemy = enemyGenerator.Generate(pos.transform.position);
-                var chara = enemy.GetComponent<GameCharacter>();
-                chara.Initialize(GameCharaLayerDic[(int)CollisionManager.ObjectType.Enemy]);
-                managedGameCharacterList.Add(chara);
-                CollisionManager.Instance.AddList(enemy);
-            }
+            CreateEnemy();
         }
 
         public Vector3 GetCameraTopLeft()
@@ -65,36 +45,23 @@ namespace Game.System
 
         void CreatePlayer()
         {
-            var preafab = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
-            var player = Instantiate(preafab, setPlayerPos, Quaternion.identity);
-            var chara = player.GetComponent<GameCharacter>();
-            chara.Initialize(GameCharaLayerDic[(int)CollisionManager.ObjectType.Player]);
-            managedGameCharacterList.Add(chara);
-            CollisionManager.Instance.AddList(player);
+            var player = characterManager.CreateChara(CollisionManager.ObjectType.Player);
+            player.transform.position = setPlayerPos;
+        }
+
+        void CreateEnemy()
+        {
+            foreach (var pos in generatePos)
+            {
+                var enemy = characterManager.CreateChara(CollisionManager.ObjectType.Enemy);
+                enemy.transform.position = pos.transform.position;
+            }
         }
 
         void Update()
         {
             InputManager.Instance.OnUpdate();
-            var remove = managedGameCharacterList.Where(chara => chara.IsDestroy);
-            if (remove.Count() > 0)
-            {
-                var removeList = remove.ToArray();
-                foreach (var obj in removeList)
-                {
-                    managedGameCharacterList.Remove(obj);
-                    CollisionManager.Instance.Remove(obj);
-                }
-            }
-            // todo: OnUpdate中に管理数が増減する処理があると、GetEnumeratorでエラーが発生する。
-            //       現状インクリメント方式で対応しているが、いずれ対処したいところ。
-            // foreach (var gameCharacter in managedGameCharacterList)
-            for (var i = 0; i < managedGameCharacterList.Count(); i++)
-            {
-                //gameCharacter.OnUpdate();
-                managedGameCharacterList[i].OnUpdate();
-            }
-            CollisionManager.Instance.OnUpdate();
+            characterManager.OnUpdate();
         }
     }
 }
