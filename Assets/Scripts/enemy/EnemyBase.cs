@@ -30,7 +30,7 @@ namespace Game
         /// <param name="shotPoint">出す座標</param>
         protected void OneShot(Vector3 shotPoint)
         {
-            var bullet = GameMaster.Instance.CharacterManager.CreateChara(CollisionManager.ObjectType.E_Bullet);
+            var bullet = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.E_Bullet);
             bullet.transform.position = transform.localPosition + shotPoint;
         }
 

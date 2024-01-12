@@ -68,7 +68,7 @@ namespace Game
 
         void OneShot()
         {
-            var bullet = GameMaster.Instance.CharacterManager.CreateChara(CollisionManager.ObjectType.P_Bullet);
+            var bullet = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.P_Bullet);
             bullet.transform.position = transform.localPosition + shotPoint;
         }
 

@@ -45,7 +45,7 @@ namespace Game.System
 
         void CreatePlayer()
         {
-            var player = characterManager.CreateChara(CollisionManager.ObjectType.Player);
+            var player = characterManager.CreateChara(ObjectType.Player);
             player.transform.position = setPlayerPos;
         }
 
@@ -53,7 +53,7 @@ namespace Game.System
         {
             foreach (var pos in generatePos)
             {
-                var enemy = characterManager.CreateChara(CollisionManager.ObjectType.Enemy);
+                var enemy = characterManager.CreateChara(ObjectType.Enemy);
                 enemy.transform.position = pos.transform.position;
             }
         }

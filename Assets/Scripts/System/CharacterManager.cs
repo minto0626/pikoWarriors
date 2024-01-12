@@ -6,22 +6,34 @@ using UnityEngine;
 
 namespace Game.System
 {
+    public enum ObjectType
+    {
+        Player = 0,
+        Enemy,
+        P_Bullet,
+        E_Bullet,
+
+        Length,
+    }
+
     public class CharacterManager
     {
         readonly List<GameCharacter> manageCharaList;
         readonly Dictionary<int, int> charaLayerDic;
 
+        readonly CollisionManager collisionManager;
+
         public CharacterManager()
         {
             charaLayerDic = new();
-            for (var index = 0; index < (int)CollisionManager.ObjectType.Length; index++)
+            for (var index = 0; index < (int)ObjectType.Length; index++)
             {
-                charaLayerDic.Add(index, LayerMask.NameToLayer(((CollisionManager.ObjectType)index).ToString()));
+                charaLayerDic.Add(index, LayerMask.NameToLayer(((ObjectType)index).ToString()));
             }
 
             manageCharaList = new();
+            collisionManager = new();
 
-            CollisionManager.Instance.SetUp();
             ObjectPooler.Instance.SetUp();
             var b = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
             const int BULLET_MAX = 30;
@@ -37,7 +49,7 @@ namespace Game.System
                 foreach (var obj in removeList)
                 {
                     manageCharaList.Remove(obj);
-                    CollisionManager.Instance.Remove(obj);
+                    collisionManager.Remove(obj);
                 }
             }
             // todo: OnUpdate中に管理数が増減する処理があると、GetEnumeratorでエラーが発生する。
@@ -49,31 +61,31 @@ namespace Game.System
                 manageCharaList[i].OnUpdate();
             }
 
-            CollisionManager.Instance.OnUpdate();
+            collisionManager.OnUpdate();
         }
 
-        public GameCharacter CreateChara(CollisionManager.ObjectType objectType)
+        public GameCharacter CreateChara(ObjectType objectType)
         {
             GameCharacter obj;
 
             switch (objectType)
             {
-                case CollisionManager.ObjectType.Player:
+                case ObjectType.Player:
                 {
                     var preafab = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
                     obj = GameObject.Instantiate(preafab).GetComponent<GameCharacter>();
                 }
                 break;
 
-                case CollisionManager.ObjectType.Enemy:
+                case ObjectType.Enemy:
                 {
                     var preafab = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.ENEMY);
                     obj = GameObject.Instantiate(preafab).GetComponent<GameCharacter>();
                 }
                 break;
 
-                case CollisionManager.ObjectType.P_Bullet:
-                case CollisionManager.ObjectType.E_Bullet:
+                case ObjectType.P_Bullet:
+                case ObjectType.E_Bullet:
                 {
                     obj = ObjectPooler.Instance.GetObject().GetComponent<GameCharacter>();
                 }
@@ -85,7 +97,7 @@ namespace Game.System
 
             obj.Initialize(charaLayerDic[(int)objectType]);
             manageCharaList.Add(obj);
-            CollisionManager.Instance.AddList(obj.gameObject);
+            collisionManager.AddList(obj.gameObject);
 
             return obj;
         }
