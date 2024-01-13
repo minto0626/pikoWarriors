@@ -12,6 +12,7 @@ namespace Game.System
         Enemy,
         P_Bullet,
         E_Bullet,
+        Weapon,
 
         Length,
     }
@@ -68,6 +69,7 @@ namespace Game.System
         {
             GameCharacter obj;
 
+            // todo: 取り出し口共通化
             switch (objectType)
             {
                 case ObjectType.Player:
@@ -88,6 +90,13 @@ namespace Game.System
                 case ObjectType.E_Bullet:
                 {
                     obj = bulletPool.Get();
+                }
+                break;
+
+                case ObjectType.Weapon:
+                {
+                    var preafab = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.OVER_BATH);
+                    obj = GameObject.Instantiate(preafab).GetComponent<GameCharacter>();
                 }
                 break;
 

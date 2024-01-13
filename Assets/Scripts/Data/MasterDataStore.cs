@@ -2,42 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MasterDataStore : SingletonMonoBehaviour<MasterDataStore>
+namespace Game.System
 {
-    public enum DataType
+    /// <summary>
+    /// Resourceの参照を持つクラス
+    /// ※全体的に手直しが必要
+    /// </summary>
+    public class MasterDataStore : SingletonMonoBehaviour<MasterDataStore>
     {
-        INVALID = -1,
-        PLAYER,
-        ENEMY,
-        BULLET,
-        MAX
-    }
-
-    [SerializeField] GameObject playerPref;
-    [SerializeField] GameObject enemyPref;
-    [SerializeField] GameObject bulletPref;
-
-    void Start()
-    {
-        if (CheckInstance())
+        public enum DataType
         {
-            DontDestroyOnLoad(gameObject);
+            INVALID = -1,
+            PLAYER,
+            ENEMY,
+            BULLET,
+            OVER_BATH,
+            MAX,
         }
-    }
 
-    public GameObject GetObject(DataType type)
-    {
-        switch (type)
+        [SerializeField] GameObject playerPref;
+        [SerializeField] GameObject enemyPref;
+        [SerializeField] GameObject bulletPref;
+        [SerializeField] GameObject overBathPref;
+
+        void Start()
         {
-            case DataType.PLAYER:
-                return playerPref;
-
-            case DataType.ENEMY:
-                return enemyPref;
-
-            case DataType.BULLET:
-                return bulletPref;
+            if (CheckInstance())
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
-        return null;
+
+        public GameObject GetObject(DataType type)
+        {
+            switch (type)
+            {
+                case DataType.PLAYER:
+                    return playerPref;
+
+                case DataType.ENEMY:
+                    return enemyPref;
+
+                case DataType.BULLET:
+                    return bulletPref;
+
+                case DataType.OVER_BATH:
+                    return overBathPref;
+            }
+            return null;
+        }
     }
 }
