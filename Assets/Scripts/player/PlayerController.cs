@@ -21,7 +21,7 @@ namespace Game
         public override void Initialize(int layer)
         {
             base.Initialize(layer);
-            weapon = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Weapon).GetComponent<Weapon>();
+            weapon = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Weapon_OverBath).GetComponent<Weapon>();
             weapon.transform.SetParent(transform);
         }
 

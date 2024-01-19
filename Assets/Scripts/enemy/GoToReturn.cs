@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.System;
 
 namespace Game
 {
@@ -16,10 +17,6 @@ namespace Game
             Return,
         }
 
-        /// <summary>
-        /// 弾の発射位置
-        /// </summary>
-        readonly Vector3 SHOT_POINT = new Vector3(0f, -0.3f, 0f);
         /// <summary>
         /// 止まる時の座標
         /// </summary>
@@ -44,6 +41,8 @@ namespace Game
         /// 現在のフェーズ
         /// </summary>
         Phase nowPhase;
+
+        Weapon weapon;
 
         public override float Radius => 0.5f;
 

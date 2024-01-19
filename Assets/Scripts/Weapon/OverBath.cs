@@ -71,7 +71,7 @@ namespace Game
 
         void Shot()
         {
-            var bullet = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.P_Bullet);
+            var bullet = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Player_Bullet);
             bullet.transform.position = transform.position + shotPoint;
         }
     }

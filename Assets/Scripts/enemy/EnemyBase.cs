@@ -25,16 +25,6 @@ namespace Game
         }
 
         /// <summary>
-        /// 弾を一発出す
-        /// </summary>
-        /// <param name="shotPoint">出す座標</param>
-        protected void OneShot(Vector3 shotPoint)
-        {
-            var bullet = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.E_Bullet);
-            bullet.transform.position = transform.localPosition + shotPoint;
-        }
-
-        /// <summary>
         /// 画面外なら非表示
         /// </summary>
         protected bool Disappear()
