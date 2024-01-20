@@ -30,6 +30,7 @@ namespace Game.System
         Player_Bullet,
         Enemy_Bullet,
         Weapon_OverBath,
+        Weapon_Gun,
 
         Num,
     }
@@ -80,6 +81,7 @@ namespace Game.System
             {(int)ObjectType.Enemy_Mon, LayerType.Enemy},
             {(int)ObjectType.Enemy_Bullet, LayerType.E_Bullet},
             {(int)ObjectType.Weapon_OverBath, LayerType.Weapon},
+            {(int)ObjectType.Weapon_Gun, LayerType.Weapon},
         };
 
         public CharacterManager()
@@ -98,7 +100,7 @@ namespace Game.System
             // todo: リソースはAddressableを使用する。何かしらのデータを使用して、forearchで回せるように。
             var playerBullet = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
             characterFactoryDic.Add((int)ObjectType.Player_Bullet, new Pool(playerBullet.GetComponent<GameCharacter>(), BULLET_POOL_MAX));
-            var enemyBullet = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.BULLET);
+            var enemyBullet = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.E_BULLET);
             characterFactoryDic.Add((int)ObjectType.Enemy_Bullet, new Pool(enemyBullet.GetComponent<GameCharacter>(), BULLET_POOL_MAX));
             var player = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.PLAYER);
             characterFactoryDic.Add((int)ObjectType.Player_Piko, new SingleUnit(player.GetComponent<GameCharacter>()));
@@ -106,6 +108,8 @@ namespace Game.System
             characterFactoryDic.Add((int)ObjectType.Enemy_Mon, new SingleUnit(enemy.GetComponent<GameCharacter>()));
             var wepon = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.OVER_BATH);
             characterFactoryDic.Add((int)ObjectType.Weapon_OverBath, new SingleUnit(wepon.GetComponent<GameCharacter>()));
+            var gun = MasterDataStore.Instance.GetObject(MasterDataStore.DataType.GUN);
+            characterFactoryDic.Add((int)ObjectType.Weapon_Gun, new SingleUnit(gun.GetComponent<GameCharacter>()));
         }
 
         public void OnUpdate()

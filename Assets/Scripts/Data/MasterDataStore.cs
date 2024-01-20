@@ -16,14 +16,18 @@ namespace Game.System
             PLAYER,
             ENEMY,
             BULLET,
+            E_BULLET,
             OVER_BATH,
+            GUN,
             MAX,
         }
 
         [SerializeField] GameObject playerPref;
         [SerializeField] GameObject enemyPref;
         [SerializeField] GameObject bulletPref;
+        [SerializeField] GameObject e_bulletPref;
         [SerializeField] GameObject overBathPref;
+        [SerializeField] GameObject gunPref;
 
         void Start()
         {
@@ -46,8 +50,14 @@ namespace Game.System
                 case DataType.BULLET:
                     return bulletPref;
 
+                case DataType.E_BULLET:
+                    return e_bulletPref;
+
                 case DataType.OVER_BATH:
                     return overBathPref;
+                
+                case DataType.GUN:
+                    return gunPref;
             }
             return null;
         }

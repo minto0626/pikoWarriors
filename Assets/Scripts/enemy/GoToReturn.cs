@@ -54,6 +54,8 @@ namespace Game
             nowPhase = Phase.Go;
             waitTimer = 0f;
             shotCount = 0;
+            weapon = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Weapon_Gun).GetComponent<Weapon>();
+            weapon.transform.SetParent(transform);
         }
 
         public override void OnUpdate() => PhaseUpdate();
@@ -87,7 +89,7 @@ namespace Game
                     {
                         if (shotCount == 0)
                         {
-                            base.OneShot(SHOT_POINT);
+                            weapon.Attack();
                             shotCount++;
                         }
                     }
