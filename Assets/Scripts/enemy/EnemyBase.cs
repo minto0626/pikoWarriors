@@ -8,9 +8,8 @@ namespace Game
 {
     public abstract class EnemyBase : GameCharacter, ICircleCollison
     {
-        [SerializeField]
         protected float moveSpeed;
-        protected Vector3 movePos = Vector3.zero;
+        protected Vector3 moveDir = Vector3.zero;
         protected GameMaster gm = null;
 
         public virtual Vector2 Center => transform.position;
