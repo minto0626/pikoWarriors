@@ -16,6 +16,7 @@ namespace Game.System
         P_Bullet,
         E_Bullet,
         Weapon,
+        Wall,
 
         Length,
     }
@@ -155,6 +156,18 @@ namespace Game.System
             collisionManager.AddList(obj);
 
             return obj;
+        }
+
+        /// <summary>
+        /// 実体化済のオブジェクトを管理に回します。
+        /// </summary>
+        /// <param name="layerType">オブジェクトのレイヤー</param>
+        /// <param name="character">オブジェクトの参照</param>
+        public void SetChara(LayerType layerType, GameCharacter character)
+        {
+            character.Initialize(charaLayerDic[(int)layerType]);
+            manageCharaList.Add(character);
+            collisionManager.AddList(character);
         }
     }
 }

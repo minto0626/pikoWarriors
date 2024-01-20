@@ -10,7 +10,6 @@ namespace Game
     {
         Vector3 moveDir;
         float moveSpeed;
-        GameMaster gm = null;
 
         public Vector2 Center => transform.position;
         public float Radius => 0.25f;
@@ -28,26 +27,12 @@ namespace Game
         public override void OnUpdate()
         {
             transform.position += moveDir * (moveSpeed * Time.deltaTime);
-            Disappear();
         }
 
         void Setup()
         {
             moveDir = Vector3.zero;
             moveSpeed = 0f;
-            gm = GameMaster.Instance;
-        }
-
-        /// <summary>
-        /// 画面外なら非表示
-        /// </summary>
-        void Disappear()
-        {
-            // +1して画面外で消えるようにする
-            if((gm.GetCameraTopLeft().y + 1f) < transform.position.y)
-            {
-                base.DestroyCharacter();
-            }
         }
 
         /// <summary>

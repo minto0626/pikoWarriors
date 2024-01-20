@@ -58,7 +58,6 @@ namespace Game
         public override void Initialize(int layer)
         {
             base.Initialize(layer);
-            base.Setup();
             moveDir = MOVE_BASE_DIR;
             moveSpeed = MOVE_BASE_SPEED;
             nowPhase = Phase.Go;
@@ -110,7 +109,7 @@ namespace Game
                 break;
                 case Phase.Return:
                 {
-                    if (base.Disappear())
+                    if (base.IsDestroy)
                     {
                         return;
                     }
