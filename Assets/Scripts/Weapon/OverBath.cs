@@ -13,7 +13,7 @@ namespace Game
         /// <summary>
         /// 弾の発射位置
         /// </summary>
-        readonly Vector3 shotPoint = new(0f, 0.3f, 0f);
+        readonly Vector3 SHOT_POINT = new(0f, 0.3f, 0f);
         /// <summary>
         /// 1ショットの発射回数
         /// </summary>
@@ -22,6 +22,14 @@ namespace Game
         /// 弾の発射間隔
         /// </summary>
         readonly float SHOT_INTERVAL_TIME = (1f / 60f) * 5f;
+        /// <summary>
+        /// 弾の発射方向
+        /// </summary>
+        readonly Vector3 SHOT_DIR = new Vector3(0f, 1f, 0f);
+        /// <summary>
+        /// 弾の速度
+        /// </summary>
+        readonly float SHOT_SPEED = 20f;
 
         /// <summary>
         /// 発射可能フラグ
@@ -71,8 +79,10 @@ namespace Game
 
         void Shot()
         {
-            var bullet = GameMaster.Instance.CharacterManager.CreateChara(base.TeamObjType);
-            bullet.transform.position = transform.position + shotPoint;
+            var bullet = GameMaster.Instance.CharacterManager.CreateChara(base.TeamObjType).GetComponent<BulletController>();
+            bullet.transform.position = transform.position + SHOT_POINT;
+            bullet.SetMoveDir(SHOT_DIR);
+            bullet.SetMoveSpeed(SHOT_SPEED);
         }
     }
 }

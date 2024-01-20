@@ -18,6 +18,15 @@ namespace Game
         }
 
         /// <summary>
+        /// 移動方向のベース
+        /// </summary>
+        readonly Vector3 MOVE_BASE_DIR = new(0f, -1f, 0f);
+        /// <summary>
+        /// 移動速度のベース
+        /// </summary>
+        readonly float MOVE_BASE_SPEED = 3f;
+
+        /// <summary>
         /// 止まる時の座標
         /// </summary>
         readonly float WAIT_POINT = 0f;
@@ -50,7 +59,8 @@ namespace Game
         {
             base.Initialize(layer);
             base.Setup();
-            movePos.y = base.moveSpeed;
+            moveDir = MOVE_BASE_DIR;
+            moveSpeed = MOVE_BASE_SPEED;
             nowPhase = Phase.Go;
             waitTimer = 0f;
             shotCount = 0;
@@ -73,7 +83,7 @@ namespace Game
                     if (gameObject.transform.position.y <= WAIT_POINT)
                     {
                         nowPhase = Phase.Wait;
-                        movePos.y = 0f;
+                        moveSpeed = 0f;
                         return;
                     }
                 }
@@ -83,7 +93,7 @@ namespace Game
                     if (waitTimer >= RETURN_TIME)
                     {
                         nowPhase = Phase.Return;
-                        movePos.y = -base.moveSpeed;
+                        moveSpeed = -MOVE_BASE_SPEED;
                         return;
                     }
                     else if (waitTimer >= SHOT_TIME)
@@ -111,7 +121,7 @@ namespace Game
                 return;
             }
 
-            transform.position += movePos;
+            transform.position += moveDir * (moveSpeed * Time.deltaTime);
         }
     }
 }

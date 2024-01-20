@@ -11,7 +11,7 @@ namespace Game
         /// <summary>
         /// プレイヤーの移動速度
         /// </summary>
-        float moveSpeed = 0.05f;
+        float moveSpeed = 10f;
 
         public Vector2 Center => transform.position;
         public float Radius => 1;
@@ -34,8 +34,8 @@ namespace Game
 
         void MoveControl()
         {
-            var move = InputManager.Instance.GetMoveValue();
-            gameObject.transform.Translate(move.x * moveSpeed, move.y * moveSpeed, 0f);
+            Vector3 move = InputManager.Instance.GetMoveValue();
+            transform.position += move * (moveSpeed * Time.deltaTime);
         }
 
         void BulletShot()

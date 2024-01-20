@@ -8,7 +8,8 @@ namespace Game
 {
     public class BulletController : GameCharacter, ICircleCollison
     {
-        float moveSpeed = 0.1f;
+        Vector3 moveDir;
+        float moveSpeed;
         GameMaster gm = null;
 
         public Vector2 Center => transform.position;
@@ -26,12 +27,14 @@ namespace Game
 
         public override void OnUpdate()
         {
-            gameObject.transform.Translate(0f, moveSpeed, 0f);
+            transform.position += moveDir * (moveSpeed * Time.deltaTime);
             Disappear();
         }
 
         void Setup()
         {
+            moveDir = Vector3.zero;
+            moveSpeed = 0f;
             gm = GameMaster.Instance;
         }
 
@@ -45,6 +48,24 @@ namespace Game
             {
                 base.DestroyCharacter();
             }
+        }
+
+        /// <summary>
+        /// 弾の発射方向を設定。正規化されて使用されるので注意
+        /// </summary>
+        /// <param name="dir">方向</param>
+        public void SetMoveDir(Vector3 dir)
+        {
+            moveDir = dir.normalized;
+        }
+
+        /// <summary>
+        /// 弾の速度を設定
+        /// </summary>
+        /// <param name="speed">速度</param>
+        public void SetMoveSpeed(float speed)
+        {
+            moveSpeed = speed;
         }
     }
 }
