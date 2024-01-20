@@ -19,7 +19,7 @@ namespace Game
 
         void Shot()
         {
-            var bullet = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Enemy_Bullet);
+            var bullet = GameMaster.Instance.CharacterManager.CreateChara(base.TeamObjType);
             bullet.transform.position = transform.position + SHOT_POINT;
         }
     }

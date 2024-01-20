@@ -55,6 +55,7 @@ namespace Game
             waitTimer = 0f;
             shotCount = 0;
             weapon = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Weapon_Gun).GetComponent<Weapon>();
+            weapon.SetAttackAttribute(Weapon.TeamAttribute.Enemy);
             weapon.transform.SetParent(transform);
         }
 

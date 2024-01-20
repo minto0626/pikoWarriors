@@ -22,6 +22,7 @@ namespace Game
         {
             base.Initialize(layer);
             weapon = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Weapon_OverBath).GetComponent<Weapon>();
+            weapon.SetAttackAttribute(Weapon.TeamAttribute.Player);
             weapon.transform.SetParent(transform);
         }
 

@@ -25,6 +25,8 @@ namespace Game.System
     /// </summary>
     public enum ObjectType
     {
+        None = -1,
+
         Player_Piko,
         Enemy_Mon,
         Player_Bullet,
