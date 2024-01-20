@@ -27,7 +27,7 @@ namespace Game
 
         public override void OnUpdate()
         {
-            transform.position += moveDir * moveSpeed * Time.deltaTime;
+            transform.position += moveDir * (moveSpeed * Time.deltaTime);
             Disappear();
         }
 
