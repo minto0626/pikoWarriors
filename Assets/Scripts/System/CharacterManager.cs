@@ -147,7 +147,8 @@ namespace Game.System
         public GameCharacter CreateChara(ObjectType objectType)
         {
             GameCharacter obj = characterFactoryDic[(int)objectType].GetCharacter();
-            obj.Initialize(charaLayerDic[(int)objectLayerDic[(int)objectType]]);
+            var layerIndex = (int)objectLayerDic[(int)objectType];
+            obj.Initialize(charaLayerDic[layerIndex]);
             manageCharaList.Add(obj);
             collisionManager.AddList(obj);
 
