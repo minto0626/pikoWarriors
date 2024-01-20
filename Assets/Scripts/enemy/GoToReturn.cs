@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.System;
 
 namespace Game
 {
@@ -16,10 +17,6 @@ namespace Game
             Return,
         }
 
-        /// <summary>
-        /// 弾の発射位置
-        /// </summary>
-        readonly Vector3 SHOT_POINT = new Vector3(0f, -0.3f, 0f);
         /// <summary>
         /// 止まる時の座標
         /// </summary>
@@ -45,6 +42,8 @@ namespace Game
         /// </summary>
         Phase nowPhase;
 
+        Weapon weapon;
+
         public override float Radius => 0.5f;
 
         public override void Initialize(int layer)
@@ -55,6 +54,9 @@ namespace Game
             nowPhase = Phase.Go;
             waitTimer = 0f;
             shotCount = 0;
+            weapon = GameMaster.Instance.CharacterManager.CreateChara(ObjectType.Weapon_Gun).GetComponent<Weapon>();
+            weapon.SetAttackAttribute(Weapon.TeamAttribute.Enemy);
+            weapon.transform.SetParent(transform);
         }
 
         public override void OnUpdate() => PhaseUpdate();
@@ -88,7 +90,7 @@ namespace Game
                     {
                         if (shotCount == 0)
                         {
-                            base.OneShot(SHOT_POINT);
+                            weapon.Attack();
                             shotCount++;
                         }
                     }

@@ -320,6 +320,11 @@ MonoBehaviour:
     type: 3}
   bulletPref: {fileID: 3911931625135941230, guid: 84674937b5addc04593ce906f2138028,
     type: 3}
+  e_bulletPref: {fileID: 6911916701978461696, guid: a0ec83c931e16a94da4fda948e9b0ef1,
+    type: 3}
+  overBathPref: {fileID: 5356409323352187196, guid: 000b40943a86f0d479264daefb18b5f6,
+    type: 3}
+  gunPref: {fileID: 5297341796741131253, guid: 29de70c56b9f8794cbc68447864ccc85, type: 3}
 --- !u!1 &2016039772
 GameObject:
   m_ObjectHideFlags: 0
