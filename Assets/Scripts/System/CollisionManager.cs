@@ -97,6 +97,7 @@ namespace Game.System
                 var currentLayer = 1 << current.Layer;
                 var current_circle = current as ICircleCollison;
                 var current_square = current as ISquareCollison;
+                var current_capsule = current as ICapsuleCollison;
 
                 for (var j = i + 1; j < managedCollisonList.Count; j++)
                 {
@@ -132,21 +133,25 @@ namespace Game.System
                         continue;
                     }
 
+                    var target_capsule = target as ICapsuleCollison;
+                    bool isCtoCap = current_circle != null & target_capsule != null;
+                    if (isCtoCap && CircleAndCapsule(current_circle, target_capsule))
+                    {
+                        current.OnHit(target);
+                        target.OnHit(current);
+                        continue;
+                    }
+
+                    bool isCaptoC = current_capsule != null & target_circle != null;
+                    if (isCaptoC && CircleAndCapsule(target_circle, current_capsule))
+                    {
+                        current.OnHit(target);
+                        target.OnHit(current);
+                        continue;
+                    }
+
                     // 衝突判定メモ
                     {
-                        // // 円とカプセル
-                        // if((cForm == 0 && tForm == 1) || (cForm == 1 && tForm == 0)){
-                        //     if(CirtoCap_Collision(current.pos,target.pos,
-                        //                             current.radius, target.radius, 
-                        //                             target.pos.x + target.vSeg.x, target.pos.y + target.vSeg.y,
-                        //                             target.pos.x - target.vSeg.x, target.pos.y - target.vSeg.y)){
-                        //         current.b = true;
-                        //         target.b = true;
-                        //         current.TargetDamage = target.CurrentDamage;
-                        //         target.TargetDamage = current.CurrentDamage;
-                        //     }
-                        // }
-
                         // // カプセルとカプセル
                         // if(cForm == 1 && tForm == 1){
                         //     if(CaptoCap_Collision(current.pos,target.pos,
@@ -212,30 +217,46 @@ namespace Game.System
             return sqrLength <= circle.Radius * circle.Radius;
         }
 
+        /// <summary>
+        /// 円とカプセル
+        /// </summary>
+        /// <param name="circle">円</param>
+        /// <param name="capsule">カプセル</param>
+        /// <returns>当たったか否か</returns>
+        bool CircleAndCapsule(ICircleCollison circle, ICapsuleCollison capsule)
+        {
+            // 二つの円をつなぐ線分との近傍点を求める
+            var startToCircle = circle.Center - capsule.StartSegment;
+            var startToEnd = capsule.EndSegment - capsule.StartSegment;
+            var nearLength = Vector2.Dot(startToEnd.normalized, startToCircle);
+            var nearLengthRate = nearLength / startToEnd.magnitude;
+            var nearPoint = capsule.StartSegment + startToEnd * Mathf.Clamp01(nearLengthRate);
+
+            // 円とカプセルとの最短距離を求める
+            float sqrDistance;
+
+            // 近傍点が線分上になく、start寄りにある
+            if (nearLengthRate < 0)
+            {
+                sqrDistance = startToCircle.sqrMagnitude;
+            }
+            // 近傍点が線分上になく、end寄りにある
+            else if (nearLengthRate > 1)
+            {
+                var endToCircle = circle.Center - capsule.EndSegment;
+                sqrDistance = endToCircle.sqrMagnitude;
+            }
+            // 近傍点が線分上にある
+            else
+            {
+                var nearToCircle = circle.Center - nearPoint;
+                sqrDistance = nearToCircle.sqrMagnitude;
+            }
+
+            return sqrDistance - (circle.Radius + capsule.Radius) * (circle.Radius + capsule.Radius) <= 0;
+        }
+
 // 衝突判定メモ
-        // /// <summary>
-        // /// 円とカプセルの当たり判定
-        // /// </summary>
-        // /// <param name="cPos">比較元の中心座標</param>
-        // /// <param name="tPos">比較対象の中心座標</param>
-        // /// <param name="cr">比較元の半径</param>
-        // /// <param name="tr">比較対象の半径</param>
-        // /// <param name="t_start_x">t線分の始点のX軸</param>
-        // /// <param name="t_start_y">t線分の始点のY軸</param>
-        // /// <param name="t_end_x">t線分の終点のX軸</param>
-        // /// <param name="t_end_y">t線分の終点のY軸</param>
-        // /// <returns></returns>
-        // bool CirtoCap_Collision(Vector3 cPos, Vector3 tPos, float cr, float tr, float t_start_x, float t_start_y, float t_end_x, float t_end_y){
-        //     var dir = (cr + tr) * (cr + tr);
-
-        //     if(dir >= (t_start_x - cPos.x) * (t_start_x - cPos.x) + (t_start_y - cPos.y) * (t_start_y - cPos.y) ||
-        //         dir >= (t_end_x - cPos.x) * (t_end_x - cPos.x) + (t_end_y - cPos.y) * (t_end_y - cPos.y)){
-        //         return true;
-        //     }else{
-        //         return false;
-        //     }
-        // }
-
         // /// <summary>
         // /// カプセルとカプセルの当たり判定
         // /// </summary>
