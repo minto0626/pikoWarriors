@@ -6,15 +6,17 @@ using Game.System;
 
 namespace Game
 {
-    public class PlayerController : GameCharacter, ICircleCollison
+    public class PlayerController : GameCharacter, ICapsuleCollison
     {
         /// <summary>
         /// プレイヤーの移動速度
         /// </summary>
         float moveSpeed = 10f;
 
-        public Vector2 Center => transform.position;
-        public float Radius => 1;
+        public float Radius => 0.5f;
+        Vector3 size = new(0f, 0.5f);
+        public Vector2 StartSegment => transform.position + size;
+        public Vector2 EndSegment => transform.position - size;
 
         Weapon weapon;
 

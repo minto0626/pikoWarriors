@@ -11,6 +11,8 @@ namespace Game.System
         [SerializeField] Vector3 setPlayerPos = new Vector3(0f, -3f, 0f);
         [SerializeField] GameObject[] generatePos;
 
+        [SerializeField] DisappearWall[] disappearWalls;
+
         CharacterManager characterManager = null;
         public CharacterManager CharacterManager => characterManager;
 
@@ -27,6 +29,7 @@ namespace Game.System
 
             CreatePlayer();
             CreateEnemy();
+            SetupDisappearWall();
         }
 
         public Vector3 GetCameraTopLeft()
@@ -55,6 +58,14 @@ namespace Game.System
             {
                 var enemy = characterManager.CreateChara(ObjectType.Enemy_Mon);
                 enemy.transform.position = pos.transform.position;
+            }
+        }
+
+        void SetupDisappearWall()
+        {
+            foreach (var wall in disappearWalls)
+            {
+                characterManager.SetChara(LayerType.Wall, wall);
             }
         }
 
