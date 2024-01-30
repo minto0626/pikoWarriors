@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a4703f59404a82f44882b4e1162b5fb8
+  m_SerializeEntries:
+  - m_GUID: a0ec83c931e16a94da4fda948e9b0ef1
+    m_Address: bullet_banana
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 84674937b5addc04593ce906f2138028
+    m_Address: bullet_bubble
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 60a5bd0fbda47ae4fb9695458c0f4ac3
+    m_Address: enemy_mon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0f3a7d0eb374036469c16d0d76768565
+    m_Address: player_piko
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 29de70c56b9f8794cbc68447864ccc85
+    m_Address: weapon_gun
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 000b40943a86f0d479264daefb18b5f6
+    m_Address: weapon_over_bath
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a7a111e4a121af846ac9a87d3019652e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 81d3aa5418ed014459a9dc75a9f2411f, type: 2}
+    - {fileID: 11400000, guid: f16517b73444ec74f9a8c98c7ccb8249, type: 2}

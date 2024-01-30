@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Game.System
@@ -16,20 +17,52 @@ namespace Game.System
         CharacterManager characterManager = null;
         public CharacterManager CharacterManager => characterManager;
 
-        void Start()
+        readonly Dictionary<int, string> charaAddressDic = new()
+        {
+            {(int)ObjectType.Player_Piko, "player_piko"},
+            {(int)ObjectType.Enemy_Mon, "enemy_mon"},
+            {(int)ObjectType.Player_Bullet, "bullet_bubble"},
+            {(int)ObjectType.Enemy_Bullet, "bullet_banana"},
+            {(int)ObjectType.Weapon_OverBath, "weapon_over_bath"},
+            {(int)ObjectType.Weapon_Gun, "weapon_gun"},
+        };
+
+        bool initialized = false;
+
+        async void Start()
         {
             if (CheckInstance())
             {
                 DontDestroyOnLoad(gameObject);
             }
+            else
+            {
+                return;
+            }
+
+            initialized = false;
+
+            await LoadAssets();
 
             InputManager.Instance.Setup();
 
             characterManager = new CharacterManager();
 
+            CreateCharaFactory();
+
             CreatePlayer();
             CreateEnemy();
             SetupDisappearWall();
+
+            initialized = true;
+        }
+
+        void OnDestroy()
+        {
+            foreach (var address in charaAddressDic.Values)
+            {
+                ResourceStore.Instance.Unload(address);
+            }
         }
 
         public Vector3 GetCameraTopLeft()
@@ -44,6 +77,24 @@ namespace Game.System
             var br = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));
             br.Scale(new Vector3(1f, -1f, 1f));
             return br;
+        }
+
+        void CreateCharaFactory()
+        {
+            // todo: 以下の処理は仮。ファクトリーはレイヤーごとで分ける必要があるかも。
+            const int BULLET_POOL_MAX = 32;
+            var playerBullet = ResourceStore.Instance.Get(charaAddressDic[(int)ObjectType.Player_Bullet]);
+            characterManager.AddFactoryCharacter((int)ObjectType.Player_Bullet, new Pool(playerBullet.GetComponent<GameCharacter>(), BULLET_POOL_MAX));
+            var enemyBullet = ResourceStore.Instance.Get(charaAddressDic[(int)ObjectType.Enemy_Bullet]);
+            characterManager.AddFactoryCharacter((int)ObjectType.Enemy_Bullet, new Pool(enemyBullet.GetComponent<GameCharacter>(), BULLET_POOL_MAX));
+            var player = ResourceStore.Instance.Get(charaAddressDic[(int)ObjectType.Player_Piko]);
+            characterManager.AddFactoryCharacter((int)ObjectType.Player_Piko, new SingleUnit(player.GetComponent<GameCharacter>()));
+            var enemy = ResourceStore.Instance.Get(charaAddressDic[(int)ObjectType.Enemy_Mon]);
+            characterManager.AddFactoryCharacter((int)ObjectType.Enemy_Mon, new SingleUnit(enemy.GetComponent<GameCharacter>()));
+            var wepon = ResourceStore.Instance.Get(charaAddressDic[(int)ObjectType.Weapon_OverBath]);
+            characterManager.AddFactoryCharacter((int)ObjectType.Weapon_OverBath, new SingleUnit(wepon.GetComponent<GameCharacter>()));
+            var gun = ResourceStore.Instance.Get(charaAddressDic[(int)ObjectType.Weapon_Gun]);
+            characterManager.AddFactoryCharacter((int)ObjectType.Weapon_Gun, new SingleUnit(gun.GetComponent<GameCharacter>()));
         }
 
         void CreatePlayer()
@@ -69,8 +120,21 @@ namespace Game.System
             }
         }
 
+        async Task LoadAssets()
+        {
+            List<Task> taskList = new();
+            foreach (var address in charaAddressDic.Values)
+            {
+                taskList.Add(ResourceStore.Instance.Load(address));
+            }
+
+            await Task.WhenAll(taskList);
+        }
+
         void Update()
         {
+            if (!initialized) { return; }
+
             InputManager.Instance.OnUpdate();
             characterManager.OnUpdate();
         }
