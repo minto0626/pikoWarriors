@@ -29,6 +29,8 @@ namespace Game.System
 
         bool initialized = false;
 
+        PlayerController player = null;
+
         async void Start()
         {
             if (CheckInstance())
@@ -99,7 +101,7 @@ namespace Game.System
 
         void CreatePlayer()
         {
-            var player = characterManager.CreateChara(ObjectType.Player_Piko);
+            player = characterManager.CreateChara(ObjectType.Player_Piko) as PlayerController;
             player.transform.position = setPlayerPos;
         }
 
@@ -137,6 +139,44 @@ namespace Game.System
 
             InputManager.Instance.OnUpdate();
             characterManager.OnUpdate();
+            PlayerScreenCheck();
+        }
+
+        void PlayerScreenCheck()
+        {
+            var playerPos = player.transform.position;
+            var playerRadius = player.Radius;
+            var playerTopSeg = player.StartSegment;
+            var screenTopLeft = GetCameraTopLeft();
+
+            if (screenTopLeft.x > playerPos.x - playerRadius)
+            {
+                var diff = (playerPos.x - playerRadius) - screenTopLeft.x;
+                playerPos.x -= diff;
+                player.transform.position = playerPos;
+            }
+            if (screenTopLeft.y < playerTopSeg.y + playerRadius)
+            {
+                var diff = (playerTopSeg.y + playerRadius) - screenTopLeft.y;
+                playerPos.y -= diff;
+                player.transform.position = playerPos;
+            }
+
+            var playerBottomSeg = player.EndSegment;
+            var screenBottomRight = GetCameraBottomRight();
+
+            if (screenBottomRight.x < playerPos.x + playerRadius)
+            {
+                var diff = (playerPos.x + playerRadius) - screenBottomRight.x;
+                playerPos.x -= diff;
+                player.transform.position = playerPos;
+            }
+            if (screenBottomRight.y > playerBottomSeg.y - playerRadius)
+            {
+                var diff = (playerBottomSeg.y - playerRadius) - screenBottomRight.y;
+                playerPos.y -= diff;
+                player.transform.position = playerPos;
+            }
         }
     }
 }
