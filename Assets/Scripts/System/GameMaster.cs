@@ -138,7 +138,12 @@ namespace Game.System
             if (!initialized) { return; }
 
             InputManager.Instance.OnUpdate();
+            characterManager.OnUpdate();
+            PlayerScreenCheck();
+        }
 
+        void PlayerScreenCheck()
+        {
             var playerPos = player.transform.position;
             var playerRadius = player.Radius;
             var playerTopSeg = player.StartSegment;
@@ -149,14 +154,12 @@ namespace Game.System
                 var diff = (playerPos.x - playerRadius) - screenTopLeft.x;
                 playerPos.x -= diff;
                 player.transform.position = playerPos;
-                Debug.Log("画面左に当たっている");
             }
             if (screenTopLeft.y < playerTopSeg.y + playerRadius)
             {
                 var diff = (playerTopSeg.y + playerRadius) - screenTopLeft.y;
                 playerPos.y -= diff;
                 player.transform.position = playerPos;
-                Debug.Log("画面上に当たっている");
             }
 
             var playerBottomSeg = player.EndSegment;
@@ -167,17 +170,13 @@ namespace Game.System
                 var diff = (playerPos.x + playerRadius) - screenBottomRight.x;
                 playerPos.x -= diff;
                 player.transform.position = playerPos;
-                Debug.Log("画面右に当たっている");
             }
             if (screenBottomRight.y > playerBottomSeg.y - playerRadius)
             {
                 var diff = (playerBottomSeg.y - playerRadius) - screenBottomRight.y;
                 playerPos.y -= diff;
                 player.transform.position = playerPos;
-                Debug.Log("画面下に当たっている");
             }
-
-            characterManager.OnUpdate();
         }
     }
 }
