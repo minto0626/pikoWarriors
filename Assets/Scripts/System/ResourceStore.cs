@@ -22,6 +22,15 @@ namespace Game.System
             }
         }
 
+        void OnDestroy()
+        {
+            foreach (var obj in objects.Values)
+            {
+                Addressables.Release(obj);
+            }
+            objects.Clear();
+        }
+
         public async Task Load(string address)
         {
             if (objects.ContainsKey(address))

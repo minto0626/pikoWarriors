@@ -59,14 +59,6 @@ namespace Game.System
             initialized = true;
         }
 
-        void OnDestroy()
-        {
-            foreach (var address in charaAddressDic.Values)
-            {
-                ResourceStore.Instance.Unload(address);
-            }
-        }
-
         public Vector3 GetCameraTopLeft()
         {
             var tl = camera.ScreenToWorldPoint(Vector3.zero);
