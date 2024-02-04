@@ -11,6 +11,9 @@ namespace Game
         Vector3 moveDir;
         float moveSpeed;
 
+        float disappearTimer = 0f;
+        static readonly float DISAPPEAR_TIME = 5f;
+
         public Vector2 Center => transform.position;
         public float Radius => 0.25f;
         public override void OnHit(GameCharacter target)
@@ -26,7 +29,8 @@ namespace Game
 
         public override void OnUpdate()
         {
-            transform.position += moveDir * (moveSpeed * Time.deltaTime);
+            MoveUpdate();
+            AutoDisappear();
         }
 
         void Setup()
@@ -51,6 +55,27 @@ namespace Game
         public void SetMoveSpeed(float speed)
         {
             moveSpeed = speed;
+        }
+
+        void MoveUpdate()
+        {
+            transform.position += moveDir * (moveSpeed * Time.deltaTime);
+        }
+
+        void AutoDisappear()
+        {
+            if (base.IsDestroy)
+            {
+                return;
+            }
+
+            if (disappearTimer >= DISAPPEAR_TIME)
+            {
+                base.DestroyCharacter();
+                return;
+            }
+
+            disappearTimer += Time.deltaTime;
         }
     }
 }
