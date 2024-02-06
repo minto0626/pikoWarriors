@@ -16,6 +16,8 @@ namespace Game.System
         CharacterManager characterManager = null;
         public CharacterManager CharacterManager => characterManager;
 
+        WaveManager waveManager = null;
+
         readonly Dictionary<int, string> charaAddressDic = new()
         {
             {(int)ObjectType.Player_Piko, "player_piko"},
@@ -53,6 +55,8 @@ namespace Game.System
 
             CreatePlayer();
             SetupDisappearWall();
+
+            waveManager = new();
 
             initialized = true;
         }
@@ -95,59 +99,6 @@ namespace Game.System
             player.transform.position = setPlayerPos;
         }
 
-        public class GameWaveData
-        {
-            public float Time { get; }
-            public ObjectType ObjType { get; }
-            public Vector3 Pos { get; }
-            public GameWaveData(float time, ObjectType objType, Vector3 pos)
-            {
-                Time = time;
-                ObjType = objType;
-                Pos = pos;
-            }
-        }
-
-        GameWaveData[] waveDataArray =
-        {
-            new(2f, ObjectType.Enemy_Mon, new Vector3(-5f, 3f, 0f)),
-            new(2f, ObjectType.Enemy_Mon, new Vector3(0f, 3f, 0f)),
-            new(2f, ObjectType.Enemy_Mon, new Vector3(5f, 3f, 0f)),
-        };
-
-        int waveDataIndex = 0;
-
-        float waveInTime = 0f;
-
-        void WaveUpdate()
-        {
-            if (waveDataIndex >= waveDataArray.Length)
-            {
-                waveInTime = 0f;
-                waveDataIndex = 0;
-                return;
-            }
-
-            if (waveDataArray[waveDataIndex].Time <= waveInTime)
-            {
-                var createTime = waveDataArray[waveDataIndex].Time;
-                while (waveDataArray[waveDataIndex].Time == createTime)
-                {
-                    var waveData = waveDataArray[waveDataIndex];
-                    var chara = characterManager.CreateChara(waveData.ObjType);
-                    chara.transform.position = waveData.Pos;
-                    waveDataIndex++;
-
-                    if (waveDataIndex >= waveDataArray.Length)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            waveInTime += Time.deltaTime;
-        }
-
         void SetupDisappearWall()
         {
             foreach (var wall in disappearWalls)
@@ -172,7 +123,7 @@ namespace Game.System
             if (!initialized) { return; }
 
             InputManager.Instance.OnUpdate();
-            WaveUpdate();
+            waveManager.OnUpdate();
             characterManager.OnUpdate();
             PlayerScreenCheck();
         }
