@@ -37,6 +37,7 @@ namespace Game
         {
             moveDir = Vector3.zero;
             moveSpeed = 0f;
+            disappearTimer = 0f;
         }
 
         /// <summary>
