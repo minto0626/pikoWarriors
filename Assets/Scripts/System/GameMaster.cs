@@ -10,7 +10,6 @@ namespace Game.System
     {
         [SerializeField] new Camera camera;
         [SerializeField] Vector3 setPlayerPos = new Vector3(0f, -3f, 0f);
-        [SerializeField] GameObject[] generatePos;
 
         [SerializeField] DisappearWall[] disappearWalls;
 
@@ -53,7 +52,6 @@ namespace Game.System
             CreateCharaFactory();
 
             CreatePlayer();
-            CreateEnemy();
             SetupDisappearWall();
 
             initialized = true;
@@ -97,13 +95,57 @@ namespace Game.System
             player.transform.position = setPlayerPos;
         }
 
-        void CreateEnemy()
+        public class GameWaveData
         {
-            foreach (var pos in generatePos)
+            public float Time { get; }
+            public ObjectType ObjType { get; }
+            public Vector3 Pos { get; }
+            public GameWaveData(float time, ObjectType objType, Vector3 pos)
             {
-                var enemy = characterManager.CreateChara(ObjectType.Enemy_Mon);
-                enemy.transform.position = pos.transform.position;
+                Time = time;
+                ObjType = objType;
+                Pos = pos;
             }
+        }
+
+        GameWaveData[] waveDataArray =
+        {
+            new(2f, ObjectType.Enemy_Mon, new Vector3(-5f, 3f, 0f)),
+            new(2f, ObjectType.Enemy_Mon, new Vector3(0f, 3f, 0f)),
+            new(2f, ObjectType.Enemy_Mon, new Vector3(5f, 3f, 0f)),
+        };
+
+        int waveDataIndex = 0;
+
+        float waveInTime = 0f;
+
+        void WaveUpdate()
+        {
+            if (waveDataIndex >= waveDataArray.Length)
+            {
+                waveInTime = 0f;
+                waveDataIndex = 0;
+                return;
+            }
+
+            if (waveDataArray[waveDataIndex].Time <= waveInTime)
+            {
+                var createTime = waveDataArray[waveDataIndex].Time;
+                while (waveDataArray[waveDataIndex].Time == createTime)
+                {
+                    var waveData = waveDataArray[waveDataIndex];
+                    var chara = characterManager.CreateChara(waveData.ObjType);
+                    chara.transform.position = waveData.Pos;
+                    waveDataIndex++;
+
+                    if (waveDataIndex >= waveDataArray.Length)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            waveInTime += Time.deltaTime;
         }
 
         void SetupDisappearWall()
@@ -130,6 +172,7 @@ namespace Game.System
             if (!initialized) { return; }
 
             InputManager.Instance.OnUpdate();
+            WaveUpdate();
             characterManager.OnUpdate();
             PlayerScreenCheck();
         }
