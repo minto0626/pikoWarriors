@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,39 +11,9 @@ namespace Game.System
     public class WaveManager
     {
         /// <summary>
-        /// キャラクター生成用のパラメータ
-        /// </summary>
-        public class GameWaveData
-        {
-            /// <summary>
-            /// 生成時間
-            /// </summary>
-            public float Time { get; }
-            /// <summary>
-            /// 生成するキャラクタ
-            /// </summary>
-            public ObjectType ObjType { get; }
-            /// <summary>
-            /// 生成する座標
-            /// </summary>
-            public Vector3 Pos { get; }
-            public GameWaveData(float time, ObjectType objType, Vector3 pos)
-            {
-                Time = time;
-                ObjType = objType;
-                Pos = pos;
-            }
-        }
-
-        /// <summary>
         /// 生成用パラメータのリスト
         /// </summary>
-        GameWaveData[] waveDataArray =
-        {
-            new(2f, ObjectType.Enemy_Mon, new Vector3(-5f, 3f, 0f)),
-            new(2f, ObjectType.Enemy_Mon, new Vector3(0f, 3f, 0f)),
-            new(2f, ObjectType.Enemy_Mon, new Vector3(5f, 3f, 0f)),
-        };
+        WaveData[] waveDataArray;
 
         /// <summary>
         /// 見ている生成用パラメータリストの場所
@@ -53,6 +24,11 @@ namespace Game.System
         /// ウェーブのタイマー
         /// </summary>
         float waveInTimeer = 0f;
+
+        public WaveManager(WaveData[] waveData)
+        {
+            this.waveDataArray = waveData;
+        }
 
         /// <summary>
         /// 更新処理
@@ -82,6 +58,40 @@ namespace Game.System
             }
 
             waveInTimeer += Time.deltaTime;
+        }
+    }
+
+    /// <summary>
+    /// キャラクター生成用のパラメータ
+    /// </summary>
+    [Serializable]
+    public class WaveData
+    {
+        [SerializeField]
+        float time;
+        /// <summary>
+        /// 生成時間
+        /// </summary>
+        public float Time => this.time;
+
+        [SerializeField]
+        ObjectType objectType;
+        /// <summary>
+        /// 生成するキャラクタ
+        /// </summary>
+        public ObjectType ObjType => this.objectType;
+
+        [SerializeField]
+        Vector3 pos;
+        /// <summary>
+        /// 生成する座標
+        /// </summary>
+        public Vector3 Pos => this.pos;
+        public WaveData(float time, ObjectType objType, Vector3 pos)
+        {
+            this.time = time;
+            this.objectType = objType;
+            this.pos = pos;
         }
     }
 }

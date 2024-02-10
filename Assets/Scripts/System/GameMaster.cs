@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using Game.DB;
 
 namespace Game.System
 {
@@ -17,6 +18,8 @@ namespace Game.System
         public CharacterManager CharacterManager => characterManager;
 
         WaveManager waveManager = null;
+
+        [SerializeField] DB_WaveData waveData_DB = null;
 
         readonly Dictionary<int, string> charaAddressDic = new()
         {
@@ -56,7 +59,7 @@ namespace Game.System
             CreatePlayer();
             SetupDisappearWall();
 
-            waveManager = new();
+            waveManager = new(waveData_DB.Data.ToArray());
 
             initialized = true;
         }
